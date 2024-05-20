@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>ONR-ISR</title>
+        <link rel="stylesheet" type="text/css" href="../static/css/styles.css">
+        <style>@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+            #buttonContainer button {
+            margin: 0 10px;
+            }
+        </style> 
+    </head>
+
+    <style>
+        div.control-row {
+            display: flex;
+            width: 80%;
+            justify-content: space-evenly;
+            flex-direction: row;
+            margin: 2rem;
+        }
+        div.control-row-title {
+            display: flex;
+            width: 80%;
+            justify-content: space-evenly;
+            flex-direction: row;
+            font-size: 3rem;
+            margin-top: 5rem;
+        }
+
+        div.button {
+            display: flex;
+            background-color: palegoldenrod;
+            border: 0;
+            width: 5rem;
+            height: 5rem;
+            justify-content: center;
+            align-items: center;
+            font-size: 4rem;
+        }
+
+        div.button:hover {
+            background-color: palevioletred;
+            box-shadow: none;
+        }
+
+        #increase-sequence:hover, #increase-scenario:hover {
+            background-color: lightgrey;
+            box-shadow: none;
+        }
+
+        #increase-sequence {
+            background-color: skyblue;
+        }
+
+        #increase-scenario {
+            background-color: palegreen;
+        }
+
+        #main {
+            margin: 0;
+            flex-direction: column;
+        }
+
+        #current-sequence, #current-scenario {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 4rem;
+        }
+
+        #control-feedback {
+            font-size: 2rem;
+        }
+
+        #survey-pre, #survey-mid, #survey-post {
+            width: 10rem;
+            font-size: 3rem;
+            background-color: lightgrey;
+        }
+        
+    </style>
+
+    <body id="body">
+        <div id="main">
+            <div id="id-input" style="display: flex; justify-content: space-between; margin-top: 5px;">
+                <label for="idLabel" class="entry">User ID: </label>
+                <input id="id-value" oninput="updateId(event)"  class="entry">
+            </div>
+            <div class="control-row-title" style="margin-top: 1rem;">
+                SEQUENCE
+            </div>
+            <div class="control-row">
+                <div id="decrease-sequence" onclick="decreaseSequence()" class="button">—</div>
+                <div id="current-sequence" ></div>
+                <div id="increase-sequence" onclick="increaseSequence()" class="button">+</div>
+            </div>
+            <div class="control-row-title">
+                SCENARIO
+            </div>
+            <div class="control-row">
+                <div id="decrease-scenario" onclick="decreaseScenario()" class="button">—</div>
+                <div id="current-scenario"></div>
+                <div id="increase-scenario" onclick="increaseScenario()" class="button">+</div>    
+            </div>
+            <div class="control-row" id="control-feedback"></div>
+            <div class="control-row-title">
+                COGNITIVE STATE
+            </div>
+            <div class="control-row">
+                <div id="cogstate-neg" onclick="cogstateNeg()" class="button">-1</div>
+                <div id="cogstate-neutral" onclick="cogstateNeutral()" class="button">0</div>
+                <div id="cogstate-pos" onclick="cogstatePos()" class="button">+1</div>    
+            </div>
+            <div class="control-row-title">
+                SURVEY
+            </div>
+            <div class="control-row">
+                <div id="survey-pre" onclick="surveyPre()" class="button">PRE</div>
+                <div id="survey-mid" onclick="surveyMid()" class="button">MID</div>
+                <div id="survey-post" onclick="surveyPost()" class="button">POST</div>    
+            </div>
+            
+        </div>
+
+        <script>
+            var sequence = 1
+            var scenario = 1
+            var survey = "none"
+            var userId = "000"
+            var cogstate = 0
+
+            // initialize the scenario/sequence values
+            document.getElementById("current-scenario").innerHTML = scenario
+            document.getElementById("current-sequence").innerHTML = sequence
+
+            async function updatecogstate(cogstate){
+                await fetch("/cognitivestate", {method: "POST", headers:{
+                    'Content-Type': 'application/json'
+                }, body: JSON.stringify({
+                    "cogstate": cogstate})
+                })
+                // update the cognitive state button
+                document.getElementById("cogstate-neg").style.backgroundColor = cogstate == -1 ? "skyblue" : "lightgrey";
+                document.getElementById("cogstate-neutral").style.backgroundColor = cogstate== 0 ? "palegreen" : "lightgrey";
+                document.getElementById("cogstate-pos").style.backgroundColor = cogstate == 1 ? "palegoldenrod" : "lightgrey";
+            }
+
+            async function updateConfig(newScenario, newSequence, survey) {
+                await fetch("/config", {method: "POST", headers: {
+                    'Content-Type': 'application/json'
+                }, body: JSON.stringify({
+                    "scenario": scenario,
+                    "sequence": sequence,
+                    "survey": survey
+                })}).then((resp) => resp.text().then((text) => {
+                    document.getElementById("control-feedback").innerHTML = text
+                }))
+
+                const resp = await fetch("/config")
+                const val = await resp.json()
+
+                this.scenario = val["scenario"]
+                this.sequence = val["sequence"]
+                this.survey = val["survey"]
+
+                document.getElementById("current-scenario").innerHTML = scenario
+                document.getElementById("current-sequence").innerHTML = sequence
+                //document.getElementById("id-value").innerHTML = userId
+
+                // update the survey button
+                document.getElementById("survey-pre").style.backgroundColor = survey == "pre" ? "skyblue" : "lightgrey";
+                document.getElementById("survey-mid").style.backgroundColor = survey == "mid" ? "palegreen" : "lightgrey";
+                document.getElementById("survey-post").style.backgroundColor = survey == "post" ? "palegoldenrod" : "lightgrey";
+                
+            }
+
+            function decreaseSequence() {
+                updateConfig(scenario, sequence--);
+            }
+
+            function increaseSequence() {
+                updateConfig(scenario, sequence++);
+            }
+
+            function decreaseScenario() {
+                updateConfig(scenario--, sequence);
+            }
+
+            function increaseScenario() {
+                updateConfig(scenario++, sequence);
+            }
+
+            function surveyPre() {
+                updateConfig(scenario, sequence, survey != "pre" ? "pre" : "none");
+            }
+
+            function surveyMid() {
+                updateConfig(scenario, sequence, survey != "mid" ? "mid" : "none");
+            }
+
+            function surveyPost() {
+                updateConfig(scenario, sequence, survey != "post" ? "post" : "none");
+            }
+            function cogstateNeg(){
+                updatecogstate(cogstate = -1)
+            }
+            function cogstateNeutral(){
+                updatecogstate(cogstate = 0)
+            }
+            function cogstatePos(){
+                updatecogstate(cogstate = 1)
+            }
+
+            function updateId(e) {
+                if (e.target.value.length === 3) {
+                    this.userId = document.getElementById("id-value").innerHTML
+                    fetch('/saveId', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({"userId": e.target.value})
+                    })
+                }
+            }
+        </script>
+    </body>
+</html>

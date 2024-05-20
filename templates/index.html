@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>ONR-ISR</title>
+        <link rel="stylesheet" type="text/css" href="../static/css/styles.css">
+        <style>@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+        #buttonContainer {
+        text-align: center;
+        height: 20px;  
+        margin: 10px 0;
+        }
+        #buttonContainer button {
+        margin: 0 10px;
+        }
+        </style> 
+    </head>
+
+    <body id="body">
+        <!-- Emergency Alert Div -->
+        <div id="emergency-alert" class="emergency-alert">
+            <img src="../static/img/alarm.png" style="width:10vw; height:10vw; margin-bottom: 2vw;">
+            <!-- <div id="emergency-alert-main-text" class="emergency-alert-main-text">Alert</div> -->
+            <div id="emergency-alert-sub-text" class="emergency-alert-sub-text">See panel for information</div>
+        </div>
+        <div class="title">
+            ISR Operator Station
+        </div>
+        <div id="buttonContainer"></div>
+        <br><br>
+        <div id="main">
+            <div id="params" class="side-panel">
+                <!-- this side panel has two components, the params (when the URL param live=false) and the instructions (when the URL param live=true) -->
+                <div id="score" style="align-self:center; margin-bottom: 5vh; width: 70%; padding-top: 2vh; padding-bottom: 2vh; box-shadow: 2px 2px 3px grey; background-color: white;">
+                    <div id="score-box" style="display: flex; justify-content:space-between; padding-left: 15%; padding-right:15%">
+                        <label for="score-out" class="entry"><b>Damage:</b></label>
+                        <output id="score-out" class="entry">
+                    </div>
+                </div>
+                <div class="vertical-container" style="align-self:center;">
+                    <!-- timer countup -->
+                    <div id="submit-timer" class="action-text" style="align-self:center; width: 70%; padding-bottom: 2vh;">0:00</div>
+                </div>
+                <div id="params-interior" style="width: 100%; height: 100%; box-shadow: 2px 2px 3px grey; background-color: white;">
+                    <div style="width: 100%; display: block">
+                        <div id="left-panel-title" class="side-panel-title">
+                            Wargame Parameters
+                        </div>
+                    </div>
+                    <br>
+                    <form id="paramsForm" onsubmit="setUp(this); if (live) {document.getElementById('start-button').disabled=true}; return false;">
+                        <div id="userid-input" style="display: flex; justify-content: space-between;">
+                            <label for="userid" class="entry">User ID: </label>
+                            <input id="userid" value="" class="entry">
+                        </div>
+                        <div id="seed-input" style="display: flex; justify-content: space-between;">
+                            <label for="seed" class="entry">Seed: </label>
+                            <input id="seed" value="ONR ISR" class="entry" disabled="true">
+                        </div>
+                        <div id="color-input" style="display: flex; justify-content: space-between;">
+                            <label for="gameColor" class="entry">Gameplay Color:</label>
+                            <select id="gameColor" class="entry">
+                                <option value="white">White</option>
+                                <option value="yellow">Yellow</option>
+                                <option value="red">Red</option>
+                            </select>
+                        </div>
+                        <div id="targets-input" style="display: flex; justify-content: space-between;">
+                            <label for="targetsIteration" class="entry">Targets Iteration:</label>
+                            <select id="targetsIteration" class="entry">
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="E">E</option>
+                            </select>
+                        </div>
+                        <div id="motion-input" style="display: flex; justify-content: space-between;">
+                            <label for="motionIteration" class="entry">Motion Iteration:</label>
+                            <select id="motionIteration" class="entry">
+                                <option value="F">F</option>
+                                <option value="G">G</option>
+                                <option value="H">H</option>
+                                <option value="I">I</option>
+                                <option value="J">J</option>
+                                <option value="K">K</option>
+                            </select>
+                        </div>
+                        <div id="pattern-input" style="display: flex; justify-content: space-between;">
+                            <label for="searchPattern" class="entry">Search Pattern:</label>
+                            <select id="searchPattern" class="entry">
+                                <option value="ladder">Ladder</option>
+                                <option value="hold">Hold</option>
+                                <option value="square">Square</option>
+                            </select>
+                        </div>
+                        <div id="AI-input" style="display: flex; justify-content: space-between;">
+                            <label for="AILevel" class="entry">AI Level:</label>
+                            <select id="AILevel" class="entry">
+                                <option value="Level0">Waypoint</option>
+                                <option value="Level1">Collaborative</option>
+                                <option value="Level2">Collision Avoidance</option>
+                                <option value="Level3">Optimized Search</option>
+                            </select>
+                        </div>  
+
+                        <!-- Instructions Box, shown when the URL parameter live=true -->
+                        <div id="instructions" style="margin: 2vw; display:none">
+                            Complete Phases I and II of the mission 
+                            <br><br>
+                            Phase I: Mouse over to assign target IDs 
+                            <br><br>
+                            Phase II: Classify target class & threat class
+                        </div>
+                        <br><br>
+                        <div style="display: flex; width: 100%; justify-content: center;">
+                            <input id="start-button" type="submit" class="button" value="Start Wargame">
+                        </div>
+                    </form>
+                    <br>
+                </div>
+            </div>
+            <canvas id="main-canvas" class="main-canvas"></canvas>
+            <div class="side-panel" id="main-alerts-container" style="display: flex; flex-direction: column; box-shadow: 2px 2px 3px grey; background-color: white;">
+                <div style="width: 100%; display: block">
+                    <div class="side-panel-title" style="background-color: #f6ebc9; border-bottom: 1px solid #e1b941;">
+                        Alerts
+                    </div>
+                </div>
+                <ul id="main-alerts">
+                </ul>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="../static/js/alerts.js"></script>
+        <script type="text/javascript" src="../static/js/waypoint.js"></script>
+        <script type="text/javascript" src="../static/js/environment.js"></script>
+        <script type="text/javascript" src="../static/js/run.js"></script>
+        <script type="text/javascript" src="../static/js/objects/UserAircraft.js"></script>
+        <script type="text/javascript" src="../static/js/objects/TargetShip.js"></script>
+        <script type="text/javascript" src="../static/js/utility/random.js"></script>
+        <script type="text/javascript" src="../static/js/utility/log.js"></script>
+        <script type="text/javascript" src="../static/js/utility/Astar.js"></script>
+
+        <script>
+            // locate the canvas and pull its 2D context
+            let canvas = document.getElementById("main-canvas");
+            let alerts = document.getElementById("main-alerts");
+            let scorebox = document.getElementById("score-out");
+            let context = canvas.getContext('2d');
+
+            var studyConfig = "none";
+            var studySurvey = "none";
+
+            // set the canvas size, this has to be on via script or the canvas will be blurry
+            var canvasLength = document.getElementById("body").offsetHeight * .80;  // this var is used by other functions for scaling pixels
+            canvas.setAttribute("width", canvasLength);
+            canvas.setAttribute("height", canvasLength);
+            document.getElementById("main-alerts-container").style.height = canvasLength + "px";
+
+            // specify the zero positions and width/height for scaling
+            var zeroX = toPx(0.1);
+            var zeroY = toPx(0.1);
+            var gameWidth = toPx(0.8);
+            var gameHeight = toPx(0.8);
+
+            // update the form parameters from the globalsupdateFormFromGlobals
+            function updateFormFromGlobals() {
+                if (this.userId) {
+                    document.getElementById("userid").setAttribute("disabled", "true")
+                }
+                if (this.gameplayColor) {
+                    document.getElementById("gameColor").value = this.gameplayColor
+                    document.getElementById("gameColor").setAttribute("disabled", "true")
+                }
+                if (this.targetsIteration) {
+                    document.getElementById("targetsIteration").value = this.targetsIteration
+                    document.getElementById("targetsIteration").setAttribute("disabled", "true")
+
+                }
+                if (this.motionIteration) {
+                    document.getElementById("motionIteration").value = this.motionIteration
+                    document.getElementById("motionIteration").setAttribute("disabled", "true")
+                }
+                if (this.searchPattern) {
+                    document.getElementById("searchPattern").value = this.searchPattern
+                    document.getElementById("searchPattern").setAttribute("disabled", "true")
+                }
+                if (this.AILevel) {
+                    document.getElementById("AILevel").value = this.AILevel
+                    document.getElementById("AILevel").setAttribute("disabled", "true")
+                }
+
+                console.log("Configuration: " + this.userId + " " + this.gameplayColor + " " + this.targetsIteration + " " + this.motionIteration + " " + this.searchPattern + " " + this.AILevel)
+                hasStarted = false
+                document.getElementById('start-button').disabled = false
+                if (counter) {
+                    stopCountupTimer()
+                }
+            }
+
+            function updateGlobalsAndFormFromConfig() {
+                this.gameplayColor = "white"  // gameplay color
+                this.targetsIteration = this.studyConfig.startsWith("A") ? "A" : "B"
+                this.motionIteration = this.studyConfig.startsWith("A") ? "G" : "I"
+                this.searchPattern = this.studyConfig.startsWith("A") ? "hold" : "ladder"
+                this.AILevel = this.studyConfig.endsWith("0") ? "Level0" : this.studyConfig.endsWith("1") ? "Level1" : this.studyConfig.endsWith("2") ? "Level2" : this.studyConfig.endsWith("3") ? "Level3" : "Level0"
+                updateFormFromGlobals()
+            }
+
+            // Parameterization
+            let params = new URLSearchParams(window.location.search) // get the URL 
+            
+            // get the user ID parameter (any text)
+            var userId = params.get("userId");
+            document.getElementById("userid").value = userId;
+
+            // get the gameplay color parameter (white, yellow, red)
+            var gameplayColor = params.get("gameplayColor")
+            
+            // get the targets iteration parameter (A, B, C, D, E)
+            var targetsIteration = params.get("targetsIteration")
+            
+            // get the motion iteration parameter (F, G, H, I, J, K)
+            var motionIteration = params.get("motionIteration")
+
+            // get the search pattern iteration parameter (ladder, hold, square)
+            var searchPattern = params.get("searchPattern")
+
+            // get the AI Level parameter (Level0, Level1, Level2, Level3 )
+            var AILevel = params.get("AILevel")
+
+            // update the globals and after pulling the params
+            if (studyConfig != "none") {
+                updateGlobalsAndFormFromConfig()
+            }
+            else{
+                updateFormFromGlobals()
+            }
+
+            // get the live parameter (hide game setup information)
+            var live = params.get("live") == "true"
+            if (live) {
+                document.getElementById("left-panel-title").innerHTML = "Instructions"
+                document.getElementById("userid-input").style.display = "none"
+                document.getElementById("seed-input").style.display = "none"
+                document.getElementById("color-input").style.display = "none"
+                document.getElementById("targets-input").style.display = "none"
+                document.getElementById("motion-input").style.display = "none"
+                document.getElementById("pattern-input").style.display = "none"
+                document.getElementById("AI-input").style.display = "none"
+                document.getElementById("instructions").style.display = "block"
+            }
+
+            // regularly poll the study scenario
+            window.setInterval(async () => {
+                const resp = await fetch("/config")
+                const val = await resp.json()
+
+                // reset the scenario if needed
+                if (studyConfig != val["config"]) {
+                    this.studyConfig = val["config"]
+                    updateGlobalsAndFormFromConfig()
+                }
+
+                // open a survey if needed
+                if (studySurvey != val["survey"]) {
+                    studySurvey = val["survey"]
+                    if (studySurvey == "pre") {
+                        window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_01DRok8dpXyBKdw", "_blank");
+                    }
+                    else if (studySurvey == "mid") {
+                        switch(studyConfig){
+                            case "A0":
+                            window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_6gnQS2GlLFUcLP0", "_blank");
+                            break;
+                            case "B0":
+                            window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_6XSf4KRVPQT3fcq", "_blank");
+                            break;
+                            case "A1":
+                            window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_5hZLiTXo2b60PBk", "_blank");
+                            break;
+                            case "B1":
+                            window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_9pD6YLv0f2FtH26", "_blank");
+                            break;
+                            case "A2":
+                            window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_cNNESY60LSWUtcq", "_blank");
+                            break;
+                            case "B2":
+                            window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_2lSrSzvTha8NhDE", "_blank");
+                            break;
+                            case "A3":
+                            window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_0dmKbH56gfgS8fA", "_blank");
+                            break;
+                            case "B3":
+                            window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_0xIWchZAGKMABh4", "_blank");
+                            break;
+                        }
+                        
+                    }
+                    else if (studySurvey == "post") {
+                        window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_8qYNvUEaobDBRj0", "_blank");
+                    } 
+                }
+            }, 250);
+
+            var userAircraftScale = 0.5;
+            var targetShipScale = 0.75;
+            var moveTargetsOffscreen = false;  // when true, target waypoints will continue in a fixed direction
+            var showTargetShipWaypoints = false;  // used for debugging, when true will show target ship waypoints
+            var showAircraftWaypoint = true; // when true, shows a dashed line to next AI waypoint
+            var showSearchPattern = true; // when true, displays selected user pattern
+            var showCollAvoidWaypoints = false; // when true, displays the collision avoidance waypoint
+            var optimizedSearchUI = false; // when true, show optimized search buttons above the canvas
+            var showOptimizedSearchPattern = false; // when true, displays proposed Optimized Search Pattern
+            
+            var useMSFScoords = false; // when true, move aircraft according to MSFS coordinates
+            
+            var prevUserAircraftVector = false
+            var userAircraftVector = false;
+            var score = 0.0; 
+            var numClassificationsToTrack = 2;
+        
+            var browser = "chromium"
+
+            //mouse events
+            // function to clamp mouse clicks to within game play area
+            function clamp(min, max, value) {
+                return Math.max(min, Math.min(max, value));
+            }
+            // UI functions for vector acceptance and denial
+            function setUVTrue() {
+                userAircraftVector = true;
+            }
+            function setUVFalse() {
+                clickX = 945;
+                //userAircraftVector = false;
+            }
+
+            // mouse position
+            var mouseX;
+            var mouseY;
+            let mouseCoordinates = [];
+
+            function setMData() {
+                if (!hasStarted) return;
+                if (!mouseX || !mouseY) return;
+                let x = mouseX;
+                //let y = mouseY;
+                mouseCoordinates.push({mouseX, mouseY});
+                if (mouseCoordinates.length === 0) return;
+                fetch('/receive-mouse-coordinates', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type' : 'application/json'
+                    },
+                    body: JSON.stringify(mouseCoordinates)
+                }).then(response => {
+                    return response.json();
+                }).then(data => {
+                    //console.log(data);
+                    mouseCoordinates = [];
+                }).catch(error => {
+                    if (error.message.includes('JSON.parse: unexpected character at line 1 column 1 of the JSON data')) { return; }
+                    else console.error('Error:', error);
+                });
+                mouseCoordinates = [];
+            }
+
+            setInterval(setMData, 1000);
+
+            canvas.onmousemove = (e) => {
+                let rect = canvas.getBoundingClientRect();
+                mouseX = (e.clientX - rect.left) / (rect.right - rect.left) * canvas.width
+                mouseY = (e.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height
+
+                mouseX = clamp(zeroX, zeroX + gameWidth, mouseX);
+                mouseY = clamp(zeroY, zeroY + gameHeight, mouseY);
+            } 
+            
+            // mouse click
+            var clickX;
+            var clickY;
+            var newX;
+            var newY;
+            var numClicks = 0;
+            var denied = 0;
+            var tmv_alerts = 0;
+            var utc_alerts = 0;
+            let lastClickTime = 0;
+            let clickData = []
+
+            function setClick() {
+                clickX = newX
+                clickY = newY
+            }
+
+            canvas.onclick = (c) => {
+                if (!hasStarted) return;
+                numClicks++;
+                const curTime = new Date().getTime();
+                if (AILevel != "Level0" && curTime - lastClickTime <= 1010) {
+                    pushAlert("Too many vector inputs at once", {emergency:true})
+                    denied++;
+                    tmv_alerts++;
+                    return;
+                }
+                lastClickTime = curTime;
+                //userAircraftVector = false;
+                let rect = canvas.getBoundingClientRect();
+
+                newX = (c.clientX - rect.left) / (rect.right - rect.left) * canvas.width
+                newY = (c.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height
+
+                newX = clamp(zeroX, zeroX + gameWidth, newX);
+                newY = clamp(zeroY, zeroY + gameHeight, newY);
+
+                clickTime = curTime - countupTimerStart;
+                clickData.push({newX, newY, clickTime, curTime});
+                fetch('/receive-mouse-click', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type' : 'application/json'
+                    },
+                    body: JSON.stringify(clickData)
+                }).then(response => {
+                    return response.json();
+                }).then(data => {
+                    //console.log(data);
+                }).catch(error => {
+                    if (error.message.includes('JSON.parse: unexpected character at line 1 column 1 of the JSON data')) { return; }
+                    else console.error('Error:', error);
+                });
+                clickData = []
+
+                // In Collaborative mode, randomly (1 out of 3 times) accept or deny userAircraftVector requests
+                if (AILevel=="Level1"){
+                    if(Math.random() <0.66){
+                        // In 1 out of 3 cases
+                        setTimeout(setClick, 1000)
+                        setTimeout(setUVTrue, 1000);
+                    }
+                    else{
+                        //setTimeout(setUVFalse, 1000);
+                        pushAlert("Unable to comply with request", {emergency:true})
+                        denied++;
+                        utc_alerts++;
+                    }
+                }
+                // In other modes, always accept userAircraftVector
+                else{
+                    setTimeout(setClick, 1000)
+                    setTimeout(setUVTrue, 1000);
+                }
+                          
+            }
+            
+            // Initialize game loop variables
+            var simStartTime = (new Date()).getTime();
+            var simPeriod = 50
+            var seed;
+            var rand;
+            
+            const startTime = new Date().getTime();
+            let countupTimerStart = Date.now()
+            let countupTimerWarningRed = 610  // warn the user when timer has been ignored for 100 seconds, by turning it red
+            let countupTimerWarningStart = countupTimerWarningRed - 10  // when the countup timer background starts changing color
+            // countup timer
+            // format the countup timer
+            function formatCountupTimer(time) {
+                minutes = Number.parseInt(time / 60)
+                seconds = Number.parseInt(time % 60)
+                format = minutes + ":" + (seconds >= 10 ? "" : "0") + seconds
+                return format
+            }
+
+            var counter
+            function startCountupTimer() {
+                counter = window.setInterval(() => {
+                    let seconds = (Date.now() - countupTimerStart) / 1000
+
+                    // set the timer text
+                    document.getElementById("submit-timer").innerHTML = formatCountupTimer(seconds)
+
+                    // visual formatting
+                    if (seconds > countupTimerWarningRed) {
+                        document.getElementById("submit-timer").style.color = "darkred"
+                        document.getElementById("submit-timer").style.fontWeight = 600
+                    }
+                    else {
+                        document.getElementById("submit-timer").style.color = "black"
+                        document.getElementById("submit-timer").style.backgroundColor = "rgba(255, 0, 0, " + .5 * ((seconds - countupTimerWarningStart) / (countupTimerWarningRed - countupTimerWarningStart)) + ")"
+                    }
+                }, 50)
+            }
+
+            // reset timer
+            function resetCountupTimer() {
+                countupTimerStart = Date.now()
+            }
+
+            function stopCountupTimer() {
+                clearInterval(counter)
+                resetCountupTimer()
+            }
+
+            function setUp(form, _userId=null, _gameColor=null, _targetsIteration=null, _motionIteration=null, _searchPattern=null, _AILevel=null, _seed=null) {
+                // Reset alerts
+                while (alerts.firstChild) {
+                    alerts.removeChild(alerts.lastChild);
+                }
+                emptyAlert();  // add an empty alert as a spacer
+                score = 0;
+                numClicks = 0;
+                newX = clickX = 945;
+                userAircraftVector = false;
+                document.getElementById("score-out").value = score;
+                userId = _userId ? _userId : userId ? userId : form.userid.value;
+                gameplayColor = _gameColor ? _gameColor : form.gameColor.value;
+                targetsIteration = _targetsIteration ? _targetsIteration : form.targetsIteration.value
+
+                motionIteration = _motionIteration ? _motionIteration : form.motionIteration.value
+                searchPattern = _searchPattern ? _searchPattern : form.searchPattern.value
+                AILevel = _AILevel ? _AILevel : form.AILevel.value
+                if (AILevel=="Level2"){
+                    showCollAvoidWaypoints = true; // when true, displays the collision avoidance waypoint
+                }
+                else{
+                    showCollAvoidWaypoints = false;
+                }
+                if (AILevel=="Level3"){
+                    // create optimization UI buttons
+                    optimizedSearchUI = true;
+                    var btnContainer = document.getElementById("buttonContainer");
+                    document.getElementById("buttonContainer").style.opacity = "1"
+                    btnContainer.innerHTML = `
+                    <div style="display: flex; width: 100%; justify-content: center;">
+                    <div id="optimize-button"  class="button" onclick="generateOptimization()">Optimize</div>
+                    <div id="accept-button" class="button" onclick="acceptOptimization()">Accept</div>
+                    <div id="cancel-button"  class="button" onclick="cancelOptimization()" >Cancel</div>
+                    </div>
+                    `;
+                }
+                else{
+                    // make optimization buttons non clickable
+                    optimizedSearchUI = false;
+                    document.getElementById("buttonContainer").style.opacity = "0"
+                }
+                if (AILevel=="Level2"){
+                    showCollAvoidWaypoints = true; // when true, displays the collision avoidance waypoint
+                }
+                else{
+                    showCollAvoidWaypoints = false;
+                }
+                
+                seed = _seed ? xmur3(_seed) : xmur3(form.seed.value);  // use xmur3 to create a seed hash
+                rand = mulberry32(seed());  // use the mulberry32 algorithm for the random number generator, call rand() to use it
+                init(
+                    targetsIteration, 
+                    motionIteration, 
+                    searchPattern
+                ); 
+
+                startCountupTimer();
+                resetCountupTimer();
+                hasStarted = true; 
+            }
+
+            // Set up grid and graph for Astar search
+            var gridWidth = 50;
+            var gridHeight = 50;
+            var grid2d = new Array(gridHeight)
+            for (let i = 0; i< gridHeight; i++){grid2d[i] = new Array(gridWidth).fill(1)}
+
+            // game loop
+            var hasStarted = false;
+            window.setInterval(() => {
+                // Reset canvas
+                context.clearRect(0, 0, canvas.width, canvas.height); // clear canvas
+
+                // draw the environment
+                drawEnvironment(context)
+
+                // updating environment object positions and state will go here
+                run(context);
+            }, simPeriod)
+
+            
+            window.setInterval(async () => {
+                if (hasStarted){
+                    getSimulatorData()
+                }
+            }, 300)
+            
+        </script>
+    </body>
+</html>
