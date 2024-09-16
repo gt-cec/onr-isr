@@ -14,9 +14,13 @@ In the future, we plan to remake the simulator in PyGame for use in reinforcemen
 
 If you use this simulator or a derivative of it in your work, please cite the following paper:
 
+MLA:
 ```
 Agbeyibor, Richard, et al. "Joint Intelligence, Surveillance, and Reconnaissance Mission Collaboration with Autonomous Pilots." Proceedings of the Human Factors and Ergonomics Society Annual Meeting. Sage CA: Los Angeles, CA: SAGE Publications, 2024.
+```
 
+BibTex:
+```
 @inproceedings{agbeyibor2024joint,
   title={Joint Intelligence, Surveillance, and Reconnaissance Mission Collaboration with Autonomous Pilots},
   author={Agbeyibor, Richard and Ruia, Vedant and Kolb, Jack and Feigh, Karen M},
