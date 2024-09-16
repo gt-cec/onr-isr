@@ -25,7 +25,6 @@ BibTex:
   title={Joint Intelligence, Surveillance, and Reconnaissance Mission Collaboration with Autonomous Pilots},
   author={Agbeyibor, Richard and Ruia, Vedant and Kolb, Jack and Feigh, Karen M},
   booktitle={Proceedings of the Human Factors and Ergonomics Society Annual Meeting},
-  pages={10711813241262302},
   year={2024},
   organization={SAGE Publications Sage CA: Los Angeles, CA}
 }
