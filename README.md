@@ -46,11 +46,11 @@ AILevel=(Level0, Level1, Level2, Level3)
 
 For example:
 
-`http://localhost:100?userId=12321&gameplayColor=yellow&targetsIteration=D&motionIteration=J&searchPattern=hold&AILevel=Level2`
+`http://localhost:100?userId=123&gameplayColor=yellow&targetsIteration=D&motionIteration=J&searchPattern=hold&AILevel=Level2`
  
 For a user study you can add `live=true` which will disable the parameters box:
 
-`http://localhost:100?userId=12321&gameplayColor=yellow&targetsIteration=D&motionIteration=J&searchPattern=hold&&AILevel=Level2&live=true`
+`http://localhost:100?userId=123&gameplayColor=yellow&targetsIteration=D&motionIteration=J&searchPattern=hold&&AILevel=Level2&live=true`
 
 ## Parameters
 
