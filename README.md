@@ -2,7 +2,7 @@
 
 This project is a 2D ISR simulator used in several of our recent works. In our studies, we used the simulator to control agents in Microsoft Flight Simulator to represent an ISR scenario off the coast of San Diego.
 
-The simulator was designed in conjunction with US Air Force and US Navy personnel to mimic standard procedures and flight paths. The project is intended for use in user studies, however we plan to remake the simulator in PyGame for use in reinforcement learning projects.
+The simulator was designed in conjunction with US Air Force and US Navy personnel to mimic standard procedures and flight paths. The project is intended for in-person user studies. We plan to remake the simulator in PyGame for use in reinforcement learning projects.
 
 ## Running the simulator
 
