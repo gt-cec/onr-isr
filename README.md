@@ -57,11 +57,17 @@ For a user study you can add `live=true` which will disable the parameters box:
 Details of the high-level configuration parameters (URL arguments) follow:
 
 `live` : `true` removes the configuration panel from the user; `false` or not provided allows the user to set the simulator configuration
+
 `userId` : the string in which logs are saved under
+
 `gameplayColor` : `white` gives the user full access to the map; `yellow` declares the right 20% of the map a yellow "no go" zone; `red` declares the right 20% of the map a red "no go" zone; this is visual-only
+
 `targetsIteration` : the number of targets, `A` has 10 targets, `B` has 20 targets, `C` has 30 targets, `D` has 50 targets, `E` has 100 targets
+
 `motionIteration` : the speed of targets, `F` moves targets at 0 units/sec; `G` moves targets at 5 units/sec; `H` moves targets at 10 units/sec; `I` moves targets at 15 units/sec; `J` randomly assigns targets to the other speeds, weighted towards slow speeds; `K` randomly assigns targets to the other speeds, weighted towards high speeds
+
 `searchPattern` : the aircraft's default pattern, `ladder` is an "up and across" pattern; `hold` is a holding pattern (the user must set all waypoints); `square` is a box pattern
+
 `AILevel` : the aircraft flight behavior, `Level0` just follows waypoints; `Level1` randomly rejects user waypoints; `Level2` uses A* to avoid obstacles in the path; `Level3` randomly suggests an alternative search pattern 
 
 Various low-level configuration parameters (aircraft scale, ship scale, visibility of simulator info, grid size for A*) can be set in `templates/index.html`. The base aircraft and ship speeds can be set in `static/js/objects/TargetShip.js` and `static/js/objects/UserAircraft.js`.
