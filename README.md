@@ -77,9 +77,8 @@ For a user study you can add `live=true` which will disable the parameters box:
 
 Details of the high-level configuration parameters (URL arguments) follow:
 
-`live` : `true` removes the configuration panel from the user; `false` or not provided allows the user to set the simulator configuration
-
-`userId` : the string in which logs are saved under
+- `live` : `true` removes the configuration panel from the user; `false` or not provided allows the user to set the simulator configuration
+- `userId` : the string in which logs are saved under
 
 `gameplayColor` : `white` gives the user full access to the map; `yellow` declares the right 20% of the map a yellow "no go" zone; `red` declares the right 20% of the map a red "no go" zone; this is visual-only
 
