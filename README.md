@@ -1,6 +1,10 @@
 # ONR-ISR
 
-This project is a 2D ISR simulator used in several of our recent works. In our studies, we used the simulator to control agents in Microsoft Flight Simulator to represent an ISR scenario off the coast of San Diego.
+Developed by Richard Agbeyibor, Jack Kolb, Garrison Scarboro, and Johnathan Sewell
+
+In collaboration with Carmen Jimenez, Vedant Ruia, Ty Mancao, Sam Coogan, and Karen M. Feigh
+
+This project is a 2D ISR simulator used in several of our works. In our studies, we used the simulator to control agents in Microsoft Flight Simulator to represent an ISR scenario off the coast of San Diego.
 
 The simulator was designed in conjunction with US Air Force and US Navy personnel to mimic standard procedures and flight paths. The project is intended for in-person user studies.
 
