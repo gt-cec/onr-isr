@@ -2,7 +2,7 @@
 
 _Developed by Richard Agbeyibor, Jack Kolb, Garrison Scarboro, and Johnathan Sewell_
 
-_Deployed in collaboration with Carmen Jimenez, Vedant Ruia, Ty Mancao, Sam Coogan, and Karen M. Feigh_
+_Deployed in collaboration with Carmen Jimenez, Vedant Ruia, Ty Mancao, Adan Vela, Sam Coogan, and Karen M. Feigh_
 
 This project is a 2D ISR simulator used in several of our works. In our studies, we used the simulator to control agents in Microsoft Flight Simulator to represent an ISR scenario off the coast of San Diego.
 
