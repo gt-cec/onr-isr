@@ -8,7 +8,7 @@ This project is a 2D ISR simulator used in several of our works. In our studies,
 
 The simulator was designed in conjunction with US Air Force and US Navy personnel to mimic standard procedures and flight paths. The project is intended for in-person user studies.
 
-**NOTE: We are remaking this domain for use in reinforcement learning projects, you can keep track of the development [here!](https://github.com/gt-cec/maisr)**
+**NOTE: We are remaking this domain in PyGame for use in reinforcement learning projects, you can keep track of the development [here!](https://github.com/gt-cec/maisr)**
 
 ## Citation
 
