@@ -419,9 +419,10 @@ def matlab_destination_update():
 
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-    # send the location
-    s.sendto(struct.pack('>f', latitude), (MATLAB_IP, MATLAB_PORT_LAT_MIN))
-    s.sendto(struct.pack('>f', longitude), (MATLAB_IP, MATLAB_PORT_LONG_MIN))
+    # send the location 5x times to mitigate UDP packet drops
+    for _ in range(5):
+        s.sendto(struct.pack('>f', latitude), (MATLAB_IP, MATLAB_PORT_LAT_MIN))
+        s.sendto(struct.pack('>f', longitude), (MATLAB_IP, MATLAB_PORT_LONG_MIN))
 
     return "success"
 
@@ -441,6 +442,20 @@ def matlab_cognitivestate():
 
     return "success"
 
+@app.route("/attentionstate", methods=["POST"])
+def matlab_attentionstate():
+    #print("we're calling /attentionstate")
+    LAOIs = request.get_json()["LAOIs"]
+    #print(LAOIs, type(LAOIs))
+    MATLAB_IP = '127.0.0.1'
+    MATLAB_PORT_ATT_STATE = 7082
+    #Getting 4th LAOI state
+    attstate = float((LAOIs >> 3) & 1)
+
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.sendto(struct.pack('>d', attstate), (MATLAB_IP, MATLAB_PORT_ATT_STATE))
+
+    return "success"
 
 if __name__ == '__main__':
     app.run("0.0.0.0", port=100, debug=False)
