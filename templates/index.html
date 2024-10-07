@@ -202,7 +202,10 @@
             function updateGlobalsAndFormFromConfig() {
                 this.gameplayColor = "white"  // gameplay color
                 this.targetsIteration = this.studyConfig.startsWith("A") ? "A" : "B"
-                this.motionIteration = this.studyConfig.startsWith("A") ? "G" : "I"
+                // motion iteration is G for low taskload and I for high taskload
+                // this.motionIteration = this.studyConfig.startsWith("A") ? "G" : "I"
+                // motion iteration is F - no motion - for both taskloads
+                this.motionIteration = this.studyConfig.startsWith("A") ? "F" : "F"
                 this.searchPattern = this.studyConfig.startsWith("A") ? "hold" : "ladder"
                 this.AILevel = this.studyConfig.endsWith("0") ? "Level0" : this.studyConfig.endsWith("1") ? "Level1" : this.studyConfig.endsWith("2") ? "Level2" : this.studyConfig.endsWith("3") ? "Level3" : "Level0"
                 updateFormFromGlobals()
