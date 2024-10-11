@@ -193,7 +193,8 @@ def spawn_ships():
 
     # send ship info and spawn point to matlab for CBF obstacle creation
     shipObstacles = [shipID, shipLat, shipLong, shipTargetClass, shipThreatClass]
-    matlab_update_ship(shipObstacles)
+    return_status = matlab_update_ship(shipObstacles)
+    print(return_status)
 
     global ships_process
     # delete the ships if they are already active
@@ -456,6 +457,11 @@ def matlab_attentionstate():
     s.sendto(struct.pack('>d', attstate), (MATLAB_IP, MATLAB_PORT_ATT_STATE))
 
     return "success"
+
+@app.route("/radio")
+def radio_panel():
+    return render_template("radio_panel.html")
+
 
 if __name__ == '__main__':
     app.run("0.0.0.0", port=100, debug=False)

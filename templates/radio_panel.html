@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>ONR-ISR Radio Panel</title>
+        <style>
+     
+        
+
+.radiopanel {
+    position: fixed;
+    bottom: 100px;
+    left: 20px;
+    z-index: 1000;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    width: 380px;
+    background-color: rgba(40, 44, 52, 0.95);
+    overflow: hidden;
+    font-size: 18px;
+    color: #e0e0e0;
+    display: none;
+    border: 2px solid #4a5d7e;
+}
+
+.radiopanel.open {
+    display: block;
+}
+
+.radiopanel h2 {
+    text-align: center;
+    color: #fff;
+    font-size: 28px;
+    margin-bottom: 20px;
+    background-color: #3f51b5;
+    border-radius: 10px;
+    padding: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.radiopanel label {
+    display: block;
+    margin-bottom: 5px;
+    color: #a0a0a0;
+}
+
+.radiopanel select,
+.radiopanel input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    background-color: #1e2838;
+    border: 1px solid #4a5d7e;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 16px;
+    
+}
+
+.radio-group {
+margin-bottom: 20px;
+}
+
+.radio-group p {
+margin-bottom: 10px;
+color: #a0a0a0;
+}
+
+.radio-options {
+display: flex;
+flex-wrap: wrap;
+gap: 10px;
+align-items: center;
+justify-content: center;
+}
+
+.radio-options label {
+flex-basis: calc(50% - 5px);
+position: relative;
+padding: 10px;
+background-color: #2c3e50;
+border-radius: 8px;
+text-align: center;
+cursor: pointer;
+transition: background-color 0.3s;
+}
+
+.radio-options label:hover {
+background-color: #34495e;
+}
+
+.radio-options input[type="radio"] {
+position: absolute;
+opacity: 0;
+width: 0;
+height: 0;
+}
+
+.radio-options input[type="radio"] + span {
+display: block;
+padding: 5px;
+color: #fff;
+}
+
+.radio-options input[type="radio"]:checked + span {
+background-color: #3f51b5;
+border-radius: 6px;
+}
+
+.frequency-control {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.frequency-btn {
+    padding: 10px 15px;
+    font-size: 20px;
+    background-color: #3f51b5;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.frequency-btn:hover {
+    background-color: #5c6bc0;
+}
+
+#frequency-display {
+    flex-grow: 1;
+    text-align: center;
+    margin: 0 10px;
+    font-size: 24px;
+    background-color: #1e2838;
+    border: 1px solid #4a5d7e;
+    color: #fff;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.controls button {
+  padding: 12px 25px;
+  font-size: 20px;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.1s;
+  flex: 1;
+  max-width: 150px;
+}
+
+.transmit-btn {
+  background-color: #4CAF50;
+}
+
+.transmit-btn:hover {
+  background-color: #45a049;
+}
+
+.receive-btn {
+  background-color: #2196F3;
+}
+
+.receive-btn:hover {
+  background-color: #1E88E5;
+}
+
+.controls button:hover {
+  transform: scale(1.05);
+}
+
+.controls button:active {
+  transform: scale(0.98);
+}
+
+.radiopanel-closebtn {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 35px;
+    font-weight: bold;
+    color: #ff4081;
+    background: none;
+    cursor: pointer;
+    border: none;
+    transition: color 0.3s;
+}
+
+.radiopanel-closebtn:hover {
+    color: #f50057;
+}
+  
+  .openbtn {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    width: 80px;
+    height: 80px;
+    cursor: pointer;
+    background-color: #464545; /* Grey color */
+    color: white;
+    border: none;
+    border-radius: 50%; /* Make it circular */
+    transition: background-color 0.3s, transform 0.2s;
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    overflow: hidden;
+    padding-top: 5px;
+  }
+  
+  .openbtn::before {
+    content: '\1F4E1'; /* Unicode for antenna icon */
+    font-size: 30px;
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+  
+  .openbtn::after {
+    content: 'RADIO';
+    font-size: 10px;
+    font-weight: bold;
+    line-height: 1;
+  }
+  .openbtn:hover {
+    background-color: #292828; 
+    transform: scale(1.05);
+  }
+  
+  .openbtn:active {
+    transform: scale(0.95);
+  }
+
+    </style> 
+ </head>
+    
+  <body>
+    
+    <!-- Radio Comms  -->
+     <div id="radiopanel"  class="radiopanel">
+        <button class="radiopanel-closebtn" >&times;</button>
+            <h2>Radio Communication</h2>
+            <label for="callsign">Callsign:</label>
+            <select id="callsign">
+                <option value="" disabled selected>Select Callsign</option>
+                <option value="NASXGS">NASXGS</option>
+                <option value="ISR">ISR</option>
+            </select>
+            <br><br>
+            <div class="radio-group">
+                <p>Select Radio:</p>
+                <div class="radio-options">
+                    <label>
+                        <input type="radio" name="radio-select" value="Nav1">
+                        <span>NAV1</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="radio-select" value="Nav2">
+                        <span>NAV2</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="radio-select" value="Comm1">
+                        <span>COMM1</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="radio-select" value="Comm2">
+                        <span>COMM2</span>
+                    </label>
+                </div>
+            </div>
+            <label for="frequency-input">Frequency:</label>
+            <div class="frequency-control">
+                <button class="frequency-btn" onclick="changeFrequency(-0.05)">-</button>
+                <input type="text" id="frequency-display" value="123.45" readonly>
+                <button class="frequency-btn" onclick="changeFrequency(0.05)">+</button>
+            </div>
+            <br><br>
+
+            <div class="controls">
+                <button onclick="transmit()" class="transmit-btn">Transmit COMM1</button>
+                <button onclick="receive()" class="receive-btn">Transmit COMM2</button>
+            </div>
+
+
+    </div>
+ 
+    <button class="openbtn" ></button> 
+</body>  
+<script>
+    let currentFrequency = 123.45;
+
+document.querySelector('.openbtn').addEventListener('click', function() {
+    console.log('clicked')
+    document.querySelector('.radiopanel').classList.toggle('open');
+    });
+
+document.querySelector('.radiopanel-closebtn').addEventListener('click', function() {
+    
+    document.querySelector('.radiopanel').classList.remove('open');
+    });
+
+
+function changeFrequency(step) {
+    const frequencyDisplay = document.getElementById('frequency-display');
+    let currentFrequency = parseFloat(frequencyDisplay.value);
+    currentFrequency += step;
+    currentFrequency = Math.max(118.00, Math.min(121.95, currentFrequency));  // Ensure frequency stays within valid range (118.00 to 121.95)
+    frequencyDisplay.value = currentFrequency.toFixed(2);
+}
+
+
+function transmit() {
+    const callsign = document.getElementById('callsign').value;
+    
+
+    if(callsign!="NASXGS"){
+        // alert('Select correct Callsign for transmitting ')
+        const dialog = document.createElement('dialog');
+            dialog.innerHTML = `
+            <p>Select correct Callsign for transmitting updates</p>
+            <button onclick="this.closest('dialog').close()">OK</button>
+            `;
+            document.body.appendChild(dialog);
+            dialog.showModal();
+    }
+    else{
+        const Frequency = document.getElementById('frequency-display').value
+        if(!Frequency){
+            // alert("Set Frequency")
+            const dialog = document.createElement('dialog');
+            dialog.innerHTML = `
+            <p>Set Frequency</p>
+            <button onclick="this.closest('dialog').close()">OK</button>
+            `;
+            document.body.appendChild(dialog);
+            dialog.showModal();
+            
+        }
+        else{
+        const radio = document.querySelector('input[name="radio-select"]:checked');
+        if (radio.value== "Comm1") {
+          
+            
+            //alert(`${callsign} transmitting on ${radio.value} ${currentFrequency.toFixed(2)} MHz`);
+            const dialog = document.createElement('dialog');
+            dialog.innerHTML = `
+            <p>${callsign} transmitting updates on ${radio.value} ${currentFrequency.toFixed(2)} MHz</p>
+            <button onclick="this.closest('dialog').close()">Close</button>
+            `;
+            document.body.appendChild(dialog);
+            dialog.showModal();
+            radioTransmit=1
+            fetch("/var?transmit=" + radioTransmit) 
+           
+        } 
+        else {
+            //alert('Select a radio channel');
+            const dialog = document.createElement('dialog');
+            dialog.innerHTML = `
+            <p>Select a radio channel for transmitting updates</p>
+            <button onclick="this.closest('dialog').close()">OK</button>
+            `;
+            document.body.appendChild(dialog);
+            dialog.showModal();
+        }
+        }
+  } if (radioTransmit==1){
+        setTimeout(() => {
+         radioTransmit=0
+         fetch("/var?transmit=" + radioTransmit) 
+        }, 20000)  // wait 20 seconds to set is back to 0
+    }
+}
+
+
+function receive() {
+    const callsign = document.getElementById('callsign').value;
+
+
+    if(callsign!="MEDEVAC"){
+        //alert('Select receiving callsign')
+        const dialog = document.createElement('dialog');
+            dialog.innerHTML = `
+            <p>Select correct Callsign for contacting Control</p>
+            <button onclick="this.closest('dialog').close()">OK</button>
+            `;
+            document.body.appendChild(dialog);
+            dialog.showModal();
+    }
+    else{
+        const Frequency = document.getElementById('frequency-display').value
+        if(!Frequency){
+            //alert("Set Frequency")
+            const dialog = document.createElement('dialog');
+            dialog.innerHTML = `
+            <p>Set Frequency</p>
+            <button onclick="this.closest('dialog').close()">OK</button>
+            `;
+            document.body.appendChild(dialog);
+            dialog.showModal();
+        }
+        else{
+            const radio = document.querySelector('input[name="radio-select"]:checked');
+            if (radio.value== "Comm2") {
+                //alert(`${callsign} receiving on ${radio.value} ${currentFrequency.toFixed(2)} MHz`);
+                const dialog = document.createElement('dialog');
+                dialog.innerHTML = `
+                <p>${callsign} contacting Control on ${radio.value} ${currentFrequency.toFixed(2)} MHz</p>
+                <button onclick="this.closest('dialog').close()">Close</button>
+                `;
+                document.body.appendChild(dialog);
+                dialog.showModal();
+                this.timeoutID=setTimeout(() => {radioReceive=1
+                fetch("/var?receive=" + radioReceive) 
+                clearTimeout(this.timeoutID)
+                 }, 5000)  // wait 5 seconds to send to server
+                
+        } 
+        else {
+            // alert('Radio channel for Receiving missing or incorrect');  
+            const dialog = document.createElement('dialog');
+            dialog.innerHTML = `
+            <p>'Radio channel for contacting Control missing or incorrect'</p>
+            <button onclick="this.closest('dialog').close()">OK</button>
+            `;
+            document.body.appendChild(dialog);
+            dialog.showModal();
+        }
+        }
+  }
+  if (radioReceive==1){
+        setTimeout(() => {
+            radioReceive=0
+         fetch("/var?receive=" + radioReceive) 
+        }, 20000)  // wait 30 seconds to set is back to 0
+    }
+}
+
+//updateFrequencyDisplay();
+
+</script>
+</html>
+

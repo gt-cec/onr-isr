@@ -34,7 +34,7 @@ if (SCENARIO_CONTROL_MODE == 0) % MEDEVAC
     CONTROL.PARAM.CBF_A2QP = zeros(1,1);
     CONTROL.PARAM.CBF_B1QP = zeros(1,1);
 else % ISR
-    CONTROL.PARAM.CBF_CONST = 0.01*7; % For OSPREY {ISR constant Value} {ISR 1st round 0.2}
+    CONTROL.PARAM.CBF_CONST = 0.2; % For OSPREY {ISR constant Value} {ISR 1st round 0.2}
     CONTROL.PARAM.CBF_H = zeros(20,1);
     CONTROL.PARAM.CBF_HDOT = zeros(20,1);
     CONTROL.PARAM.CBF_PSI = zeros(20,1);

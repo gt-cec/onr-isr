@@ -20,7 +20,8 @@ MODEL.INPUT.ATT_VALUE = 0;
 MODEL.PARAM.ATT_SAT_FLAG = 0;
 MODEL.AUX.ALPHA_DOT = 0;
 MODEL.AUX.ALPHA = 0;
-MODEL.AUX.PATH_FOLLOWED =0;
+MODEL.AUX.PATH_FOLLOWED = 0;
+MODEL.AUX.ATT_VAL_USED = 0;
 %--------------------------------------------------------------------------
 % SECOND ORDER UNICYCLE PARAMETERS
 %--------------------------------------------------------------------------
