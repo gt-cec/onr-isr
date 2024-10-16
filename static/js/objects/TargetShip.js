@@ -66,15 +66,15 @@ class TargetShip {
 
         // Default information
         this.textLines = [
-            `Track ${this.id}`,
+            `Track ID ${this.id}`,
             "Position:",
             `    (${Math.round((this.x - gameWidth/2) * 1) / 1}, ${Math.round((-(this.y - gameHeight/2)) * 1) / 1})`,
         ]
         // add conditional lines to the mouseover info
         if (rangeType === 1 || rangeType === 2 || this.seenTargetClass) {
-            this.textLines.push(`Speed: ${this.speed} knts`)
-            this.textLines.push(`Target Class: ${this.targetClass}`)
-            this.textLines.push(`Tracking: ${this.numClassification}x`)
+            //this.textLines.push(`Speed: ${this.speed} knts`)
+            //this.textLines.push(`Target Class: ${this.targetClass}`)
+            //this.textLines.push(`Tracking: ${this.numClassification}x`)
             
             if (rangeType == 1 && !this.seenThreatClass) {
                 this.textLines.push(`Threat Class: UKN`)
