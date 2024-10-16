@@ -78,6 +78,12 @@
             font-size: 3rem;
             background-color: lightgrey;
         }
+
+        #radio-ready, #radio-ack, #radio-again {
+            width: 20rem;
+            font-size: 3rem;
+            background-color: palegoldenrod;
+        }
         
     </style>
 
@@ -119,6 +125,14 @@
                 <div id="survey-pre" onclick="surveyPre()" class="button">PRE</div>
                 <div id="survey-mid" onclick="surveyMid()" class="button">MID</div>
                 <div id="survey-post" onclick="surveyPost()" class="button">POST</div>    
+            </div>
+            <div class="control-row-title">
+                RADIO COMMS
+            </div>
+            <div class="control-row">
+                <div id="radio-ready" onclick="radioReady()" class="button">Ready</div>
+                <div id="radio-ack" onclick="radioAcknowledge()" class="button">Acknowledge</div>
+                <div id="radio-again" onclick="RadioSayAgain()" class="button">Say Again</div>    
             </div>
             
         </div>
@@ -224,6 +238,20 @@
                     })
                 }
             }
+
+            function radioReady() {
+                var toSpeak = new SpeechSynthesisUtterance("Ready to copy");
+                window.speechSynthesis.speak(toSpeak);
+            }
+            function radioAcknowledge() {
+                var toSpeak = new SpeechSynthesisUtterance("Copy All");
+                window.speechSynthesis.speak(toSpeak);
+            }
+            function RadioSayAgain() {
+                var toSpeak = new SpeechSynthesisUtterance("Send transmission again.");
+                window.speechSynthesis.speak(toSpeak);
+            }
+
         </script>
     </body>
 </html>
