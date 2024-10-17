@@ -84,9 +84,15 @@
             font-size: 3rem;
             background-color: palegoldenrod;
         }
+
+        #end-mission {
+            width: 20rem;
+            font-size: 3rem;
+            background-color: lightcoral;
+        }
         
     </style>
-
+    <script type="text/javascript" src="../static/js/run.js"></script>
     <body id="body">
         <div id="main">
             <div id="id-input" style="display: flex; justify-content: space-between; margin-top: 5px;">
@@ -109,6 +115,14 @@
                 <div id="current-scenario"></div>
                 <div id="increase-scenario" onclick="increaseScenario()" class="button">+</div>    
             </div>
+            <div class="control-row-title">
+                RADIO COMMS
+            </div>
+            <div class="control-row">
+                <div id="radio-ready" onclick="radioReady()" class="button">Ready</div>
+                <div id="radio-ack" onclick="radioAcknowledge()" class="button">Acknowledge</div>
+                <div id="radio-again" onclick="RadioSayAgain()" class="button">Say Again</div>    
+            </div>
             <div class="control-row" id="control-feedback"></div>
             <div class="control-row-title">
                 COGNITIVE STATE
@@ -119,6 +133,12 @@
                 <div id="cogstate-pos" onclick="cogstatePos()" class="button">+1</div>    
             </div>
             <div class="control-row-title">
+                END MISSION
+            </div>
+            <div class="control-row">
+                <div id="end-mission" onclick="missionComplete()" class="button">End Mission</div>
+            </div>            
+            <div class="control-row-title">
                 SURVEY
             </div>
             <div class="control-row">
@@ -126,17 +146,10 @@
                 <div id="survey-mid" onclick="surveyMid()" class="button">MID</div>
                 <div id="survey-post" onclick="surveyPost()" class="button">POST</div>    
             </div>
-            <div class="control-row-title">
-                RADIO COMMS
-            </div>
-            <div class="control-row">
-                <div id="radio-ready" onclick="radioReady()" class="button">Ready</div>
-                <div id="radio-ack" onclick="radioAcknowledge()" class="button">Acknowledge</div>
-                <div id="radio-again" onclick="RadioSayAgain()" class="button">Say Again</div>    
-            </div>
+            
             
         </div>
-
+        
         <script>
             var sequence = 1
             var scenario = 1
@@ -188,7 +201,16 @@
                 document.getElementById("survey-post").style.backgroundColor = survey == "post" ? "palegoldenrod" : "lightgrey";
                 
             }
-
+            async function missionComplete() {
+                // Send POST request to Flask server to set mission_complete to true
+                await fetch("/set-mission-complete", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ "missionEnd": true })
+                });
+            }
             function decreaseSequence() {
                 updateConfig(scenario, sequence--);
             }

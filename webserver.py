@@ -63,6 +63,8 @@ study_sequence = 1
 study_config = "A0"
 study_survey = "none"
 
+mission_complete = False
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -390,6 +392,18 @@ def receive_alert():
     alertData.extend(data)
     return jsonify({})
 
+@app.route('/set-mission-complete', methods=["POST"])
+def set_mission_complete():
+    global mission_complete
+    mission_complete = request.json.get("missionEnd", False)
+    print("Set mission complete to ", mission_complete)
+    return jsonify({})
+
+@app.route('/get-mission-complete', methods=["GET"])
+def get_mission_complete():
+    #print("Sending mission complete ", mission_complete)
+    return jsonify({"missionEnd": mission_complete})
+
 # data for MATLAB route
 @app.route("/current-destination", methods=["POST"])
 # UDP update for MATLAB
@@ -416,12 +430,12 @@ def matlab_destination_update():
     longitude = float(dest_long)
 
     #print("in a/c dest x:", dest_x,  " y:", dest_y )
-    #print("out a/c dest lat:", latitude, " long:", longitude)
+    print("out a/c dest lat:", latitude, " long:", longitude)
 
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-    # send the location 5x times to mitigate UDP packet drops
-    for _ in range(5):
+    # send the location 1x times to mitigate UDP packet drops
+    for _ in range(1):
         s.sendto(struct.pack('>f', latitude), (MATLAB_IP, MATLAB_PORT_LAT_MIN))
         s.sendto(struct.pack('>f', longitude), (MATLAB_IP, MATLAB_PORT_LONG_MIN))
 

@@ -1,4 +1,3 @@
-
 // Game letiables
 let userAircraft;
 let targetShips;
@@ -457,18 +456,25 @@ function run(ctx) {
                 "numOptimized": numOptimized, "wez_alerts": wez_alerts, "osi_alerts": osi_alerts, "tmv_alerts": tmv_alerts, "utc_alerts": utc_alerts})
         })
     }
-    // Phase 2: Get target class classification for all ship
+    // Get target class classification for all ship
     let seenAll = true;
     targetShips.forEach((target) => {
         if (!target.seenTargetClass) {
             seenAll = false;
         }
     });
-    if (seenAll && !phase2Complete && phase1Complete) {
+
+    // Phase 2: Get threat class classification for all ship
+    let classedAll = true;
+    targetShips.forEach((target) => {
+        if (!target.seenThreatClass) {
+            classedAll = false;
+        }
+    });
+    if (classedAll && !phase2Complete && phase1Complete) {
         
         pushAlert("Phase 2 Complete!")
-        pushAlert("Mission Complete")
-        alert("Mission Complete!");
+        alert("Phase 2 Complete!")
         phase2Complete = true;
         const endTime = new Date().getTime();
         const time = endTime - countupTimerStart;
@@ -480,8 +486,14 @@ function run(ctx) {
             body: JSON.stringify({"phase": 2, "time": time, "score": score, "numClicks": numClicks, "unixTime": endTime, "denied": denied, 
                 "numOptimized": numOptimized, "wez_alerts": wez_alerts, "osi_alerts": osi_alerts, "tmv_alerts": tmv_alerts, "utc_alerts": utc_alerts})
         })
-        hasStarted=false;
-    }   
+        
+    }
+    
+    if(classedAll  && phase1Complete && phase2Complete){
+        //call checkMissionStatus periodically or upon certain events
+        setInterval(checkMissionStatus, 5000);
+    }
+    
     
     // Phase 3: Classifiy each target numClassif times
 
@@ -516,6 +528,25 @@ function run(ctx) {
         hasStarted=false;
     }
 
+}
+
+
+async function checkMissionStatus() {
+    // Send GET request to Flask server to check mission status
+    const response = await fetch("/get-mission-complete");
+    const data = await response.json();
+    console.log(data)
+    // if mission complete
+    if (data.missionEnd===true && hasStarted) {
+        console.log("Mission is complete");
+        missionComplete();
+    }
+}
+
+function missionComplete(){
+    pushAlert("Mission Complete")
+    alert("Mission Complete!");
+    hasStarted=false;
 }
 
 async function getSimulatorData(){

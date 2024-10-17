@@ -402,6 +402,7 @@
                 if (!hasStarted) return;
                 numClicks++;
                 const curTime = new Date().getTime();
+                // Besides Waypoint mode, send TMV alert if more than 1 waypoint in 1second
                 if (AILevel != "Level0" && curTime - lastClickTime <= 1010) {
                     pushAlert("Too many vector inputs at once", {emergency:true})
                     denied++;
@@ -436,10 +437,10 @@
                 });
                 clickData = []
 
-                // In Collaborative mode, randomly (1 out of 3 times) accept or deny userAircraftVector requests
+                // In Collaborative mode, randomly (2 out of 3 times) accept or deny userAircraftVector requests
                 if (AILevel=="Level1"){
                     if(Math.random() <0.66){
-                        // In 1 out of 3 cases
+                        // In 2 out of 3 cases
                         setTimeout(setClick, 1000)
                         setTimeout(setUVTrue, 1000);
                     }

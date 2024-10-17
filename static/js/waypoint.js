@@ -27,13 +27,15 @@ class WaypointPath {
         let waypointX = this.currentWaypoint.x;
         let waypointY = this.currentWaypoint.y;
         
+        
         if (userAircraftVector){
             // if userAircraftVector, override AI search pattern
             //waypointX = newX;
             //waypointY = newY;
             waypointX = clickX;
             waypointY = clickY;
-            // if new userAircraftVector, then move next AI waypoint to next waypoint in search pattern
+            // if first AircraftVector
+            // Or if new userAircraftVector, then move next AI waypoint to next waypoint in search pattern
             if ((prevUserAircraftVector == false) || ((newX != clickX))){
                 //console.log("new userAircraftVector")
                 // this.currentWaypointIndex++;

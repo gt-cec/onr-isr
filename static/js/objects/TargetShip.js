@@ -130,6 +130,10 @@ class TargetShip {
 
         if (rangeType === 1) {
             this.seenTargetClass = true;
+            // for non enemy ships, also make target and threat detection range the same
+            if (this.targetClass=== 0){
+                this.seenThreatClass = true;
+            }
         }
 
         if (rangeType === 2) {
