@@ -201,6 +201,8 @@
                 document.getElementById("survey-post").style.backgroundColor = survey == "post" ? "palegoldenrod" : "lightgrey";
                 
             }
+
+            
             async function missionComplete() {
                 // Send POST request to Flask server to set mission_complete to true
                 await fetch("/set-mission-complete", {
@@ -211,6 +213,22 @@
                     body: JSON.stringify({ "missionEnd": true })
                 });
             }
+
+            
+            async function missionRestart() {
+                // Send POST request to Flask server to reset mission_complete to false
+                await fetch("/set-mission-complete", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ "missionEnd": false })
+                });
+            }
+            // Listener to run missionRestart() on page reload
+            window.addEventListener('load', function() {
+                missionRestart();
+            });
             function decreaseSequence() {
                 updateConfig(scenario, sequence--);
             }
