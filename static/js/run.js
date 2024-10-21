@@ -405,22 +405,23 @@ function run(ctx) {
         }
     });
 
-    // If vector is requested but not yet accepted, draw in blue
-    if (clickX != 945 && clickX != userAircraft.nextWaypoint.x) {
+    // If at least one vector, and new vector accepted but not current aircraft destination
+    if (clickX != -1 && clickX != userAircraft.nextWaypoint.x) {
         ctx.beginPath()
         ctx.setLineDash([]);
-        ctx.fillStyle = "blue"
+        ctx.fillStyle = "red"
         ctx.ellipse(clickX, clickY, toPx(0.01)*userAircraftScale, toPx(0.01)*userAircraftScale, 0, 0, 2*Math.PI)
         ctx.fill()
 
         ctx.beginPath()
-        ctx.strokeStyle = "blue"
+        ctx.strokeStyle = "red"
         ctx.moveTo(userAircraft.x, userAircraft.y)
         ctx.lineTo(clickX, clickY)
         ctx.stroke()
     }
 
-    if (newX != clickX && newX != 945) {
+    // If at least one click, and new click is not same as last accepted vector,
+    if (newX != -1 && newX != clickX) {
         ctx.beginPath()
         ctx.setLineDash([]);
         ctx.fillStyle = "blue"

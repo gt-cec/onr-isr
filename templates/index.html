@@ -321,6 +321,7 @@
             
             var prevUserAircraftVector = false
             var userAircraftVector = false;
+            var newClick = false;
             var score = 0.0; 
             var numClassificationsToTrack = 2;
         
@@ -329,14 +330,16 @@
             //mouse events
             // function to clamp mouse clicks to within game play area
             function clamp(min, max, value) {
-                return Math.max(min, Math.min(max, value));
+                //return Math.max(min, Math.min(max, value));
+                return Math.min(Math.max(min, value), max);
             }
             // UI functions for vector acceptance and denial
             function setUVTrue() {
                 userAircraftVector = true;
+                newClick = true;
             }
             function setUVFalse() {
-                clickX = 945;
+                clickX = -1;
                 //userAircraftVector = false;
             }
 
@@ -394,6 +397,7 @@
             let clickData = []
 
             function setClick() {
+                //console.log("setClick clickX=", newX)
                 clickX = newX
                 clickY = newY
             }
@@ -453,8 +457,10 @@
                 }
                 // In other modes, always accept userAircraftVector
                 else{
-                    setTimeout(setClick, 1000)
-                    setTimeout(setUVTrue, 1000);
+                    setTimeout(() => {
+                        setClick(); // Run setClick after 1000 ms
+                        setUVTrue(); // Once setClick is finished, immediately run setUVTrue
+                    }, 1000);
                 }
                           
             }
@@ -516,7 +522,7 @@
                 emptyAlert();  // add an empty alert as a spacer
                 score = 0;
                 numClicks = 0;
-                newX = clickX = 945;
+                newX = clickX = -1; // 945 used as a debug value
                 userAircraftVector = false;
                 document.getElementById("score-out").value = score;
                 userId = _userId ? _userId : userId ? userId : form.userid.value;
