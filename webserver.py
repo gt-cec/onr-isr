@@ -272,8 +272,8 @@ def run_executable():
 def get_config():
     return jsonify({"config": study_config, "scenario": study_scenario, "sequence": study_sequence, "survey": study_survey})
 
-@app.route("/config", methods=["POST"])
-def post_config():
+@app.route("/config_ISR1", methods=["POST"])
+def post_config_ISR1():
     data = request.get_json()
 
     survey = data.get("survey")
@@ -301,6 +301,38 @@ def post_config():
     global study_scenario, study_sequence, study_config, study_survey
 
     study_config = square_order[((sequence-1) * 8) + scenario - 1]
+    study_scenario = scenario
+    study_sequence = sequence
+    study_survey = survey
+    return "Server: updated scenario (" + str(scenario) + ") and sequence (" + str(sequence) + "), new config: " + str(study_config) + ", last survey: " + str(survey)
+
+@app.route("/config", methods=["POST"])
+def post_config():
+    data = request.get_json()
+
+    survey = data.get("survey")
+    sequence = int(data.get("sequence"))
+    scenario = int(data.get("scenario"))
+
+    square_order = ["A0", "B0", "B4", "A2", "A4", "B2",
+                    "B0", "A2", "A0", "B2", "B4", "A4", 
+                    "A2", "B2", "B0", "A4", "A0", "B4", 
+                    "B2", "A4", "A2", "B4", "B0", "A0", 
+                    "A4", "B4", "B2", "A0", "A2", "B0", 
+                    "B4", "A0", "A4", "B0", "B2", "A2"]
+    if sequence > 6:
+        return "sequence too high, capped at 8"
+    if scenario > 6:
+        return "scenario too high, capped at 8"
+    if sequence < 1:
+        return "sequence too low, min is 1"
+    if scenario < 1:
+        return "scenario too low, min is 1"
+    if sequence * scenario > len(square_order):
+        return "sequence x scenario is greater than max: " + str(len(square_order))
+    global study_scenario, study_sequence, study_config, study_survey
+
+    study_config = square_order[((sequence-1) * 6) + scenario - 1]
     study_scenario = scenario
     study_sequence = sequence
     study_survey = survey
