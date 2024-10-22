@@ -496,8 +496,8 @@ def matlab_attentionstate():
     #print(LAOIs, type(LAOIs))
     MATLAB_IP = '127.0.0.1'
     MATLAB_PORT_ATT_STATE = 7082
-    #Getting 4th LAOI state
-    attstate = float((LAOIs >> 3) & 1)
+    #Getting 1st LAOI state
+    attstate = float((LAOIs >> 0) & 1)
 
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.sendto(struct.pack('>d', attstate), (MATLAB_IP, MATLAB_PORT_ATT_STATE))

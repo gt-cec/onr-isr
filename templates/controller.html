@@ -96,7 +96,7 @@
     <body id="body">
         <div id="main">
             <div id="id-input" style="display: flex; justify-content: space-between; margin-top: 5px;">
-                <label for="idLabel" class="entry">User ID: </label>
+                <label for="idLabel" class="entry" style="font-size: 3rem;">User ID: </label>
                 <input id="id-value" oninput="updateId(event)"  class="entry">
             </div>
             <div class="control-row-title" style="margin-top: 1rem;">
@@ -125,14 +125,6 @@
             </div>
             <div class="control-row" id="control-feedback"></div>
             <div class="control-row-title">
-                COGNITIVE STATE
-            </div>
-            <div class="control-row">
-                <div id="cogstate-neg" onclick="cogstateNeg()" class="button">-1</div>
-                <div id="cogstate-neutral" onclick="cogstateNeutral()" class="button">0</div>
-                <div id="cogstate-pos" onclick="cogstatePos()" class="button">+1</div>    
-            </div>
-            <div class="control-row-title">
                 END MISSION
             </div>
             <div class="control-row">
@@ -146,7 +138,14 @@
                 <div id="survey-mid" onclick="surveyMid()" class="button">MID</div>
                 <div id="survey-post" onclick="surveyPost()" class="button">POST</div>    
             </div>
-            
+            <div class="control-row-title">
+                COGNITIVE STATE
+            </div>
+            <div class="control-row">
+                <div id="cogstate-neg" onclick="cogstateNeg()" class="button">-1</div>
+                <div id="cogstate-neutral" onclick="cogstateNeutral()" class="button">0</div>
+                <div id="cogstate-pos" onclick="cogstatePos()" class="button">+1</div>    
+            </div>
             
         </div>
         
@@ -280,7 +279,7 @@
             }
 
             function radioReady() {
-                var toSpeak = new SpeechSynthesisUtterance("Ready to copy");
+                var toSpeak = new SpeechSynthesisUtterance("Ready to Receive");
                 window.speechSynthesis.speak(toSpeak);
             }
             function radioAcknowledge() {
