@@ -101,6 +101,7 @@
                                 <option value="Level1">Collaborative</option>
                                 <option value="Level2">Collision Avoidance</option>
                                 <option value="Level3">Optimized Search</option>
+                                <option value="Level4">Adaptive Collision Avoidance</option>
                             </select>
                         </div>  
 
@@ -207,7 +208,7 @@
                 // motion iteration is F - no motion - for both taskloads
                 this.motionIteration = this.studyConfig.startsWith("A") ? "F" : "F"
                 this.searchPattern = this.studyConfig.startsWith("A") ? "hold" : "ladder"
-                this.AILevel = this.studyConfig.endsWith("0") ? "Level0" : this.studyConfig.endsWith("1") ? "Level1" : this.studyConfig.endsWith("2") ? "Level2" : this.studyConfig.endsWith("3") ? "Level3" : "Level2"
+                this.AILevel = this.studyConfig.endsWith("0") ? "Level0" : this.studyConfig.endsWith("1") ? "Level1" : this.studyConfig.endsWith("2") ? "Level2" : this.studyConfig.endsWith("3") ? "Level3" :  this.studyConfig.endsWith("4") ? "Level4" :"Level0"
                 updateFormFromGlobals()
             }
 
@@ -230,7 +231,7 @@
             // get the search pattern iteration parameter (ladder, hold, square)
             var searchPattern = params.get("searchPattern")
 
-            // get the AI Level parameter (Level0, Level1, Level2, Level3 )
+            // get the AI Level parameter (Level0, Level1, Level2, Level3, Level4 )
             var AILevel = params.get("AILevel")
 
             // update the globals and after pulling the params
@@ -270,15 +271,24 @@
                 if (studySurvey != val["survey"]) {
                     studySurvey = val["survey"]
                     if (studySurvey == "pre") {
-                        window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_01DRok8dpXyBKdw", "_blank");
+                        //ISR I
+                        //window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_01DRok8dpXBKdw", "_blank");
+                        //ISR II
+                        window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_01DRok8dpXBKdw", "_blank");
                     }
                     else if (studySurvey == "mid") {
                         switch(studyConfig){
                             case "A0":
-                            window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_6gnQS2GlLFUcLP0", "_blank");
+                            //ISR I
+                            // window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_6gnQS2GlLFUcLP0", "_blank");
+                            //ISR II
+                            window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_ddp4ROVqKmrqJFQ", "_blank");
                             break;
                             case "B0":
-                            window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_6XSf4KRVPQT3fcq", "_blank");
+                            //ISR I
+                            //window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_6XSf4KRVPQT3fcq", "_blank");
+                            //ISR II
+                            window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_9EPpZIpt7eZU97g", "_blank");
                             break;
                             case "A1":
                             window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_5hZLiTXo2b60PBk", "_blank");
@@ -287,10 +297,16 @@
                             window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_9pD6YLv0f2FtH26", "_blank");
                             break;
                             case "A2":
-                            window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_cNNESY60LSWUtcq", "_blank");
+                            //ISR I
+                            //window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_cNNESY60LSWUtcq", "_blank");
+                            //ISR II
+                            window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_3pHYqhRKhgrtS2q", "_blank");
                             break;
                             case "B2":
-                            window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_2lSrSzvTha8NhDE", "_blank");
+                            //ISR I
+                            //window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_2lSrSzvTha8NhDE", "_blank");
+                            //ISR II
+                            window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_8CTNoq6b9rSBZRk", "_blank");
                             break;
                             case "A3":
                             window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_0dmKbH56gfgS8fA", "_blank");
@@ -298,11 +314,21 @@
                             case "B3":
                             window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_0xIWchZAGKMABh4", "_blank");
                             break;
+                            break;
+                            case "A4":
+                            window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_7P14226vljhQ9TM", "_blank");
+                            break;
+                            case "B4":
+                            window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_d4lxEI1iwh6emKG", "_blank");
+                            break;
                         }
                         
                     }
                     else if (studySurvey == "post") {
-                        window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_8qYNvUEaobDBRj0", "_blank");
+                        //ISR I
+                        //window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_8qYNvUEaobDBRj0", "_blank");
+                        //ISR II
+                        window.open("https://gatech.co1.qualtrics.com/jfe/form/SV_51MABtT8sd4tjuK", "_blank");
                     } 
                 }
             }, 250);
@@ -325,7 +351,8 @@
             var score = 0.0; 
             var numClassificationsToTrack = 2;
         
-            var browser = "chromium"
+            //var browser = "chromium"
+            var browser = "firefox"
 
             //mouse events
             // function to clamp mouse clicks to within game play area
@@ -532,7 +559,7 @@
                 motionIteration = _motionIteration ? _motionIteration : form.motionIteration.value
                 searchPattern = _searchPattern ? _searchPattern : form.searchPattern.value
                 AILevel = _AILevel ? _AILevel : form.AILevel.value
-                if (AILevel=="Level2"){
+                if (AILevel === "Level2"|| AILevel === "Level4"){ 
                     showCollAvoidWaypoints = true; // when true, displays the collision avoidance waypoint
                 }
                 else{
@@ -555,12 +582,6 @@
                     // make optimization buttons non clickable
                     optimizedSearchUI = false;
                     document.getElementById("buttonContainer").style.opacity = "0"
-                }
-                if (AILevel=="Level2"){
-                    showCollAvoidWaypoints = true; // when true, displays the collision avoidance waypoint
-                }
-                else{
-                    showCollAvoidWaypoints = false;
                 }
                 
                 seed = _seed ? xmur3(_seed) : xmur3(form.seed.value);  // use xmur3 to create a seed hash
