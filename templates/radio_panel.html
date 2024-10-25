@@ -185,9 +185,9 @@
                 background-color: #1E88E5;
             }
 
-            .controls button:hover {
+            /* .controls button:hover {
                 transform: scale(1.05);
-            }
+            } */
 
             .controls button:active {
                 transform: scale(0.98);
@@ -256,17 +256,15 @@
             }
         </style> 
     </head>
-    <body style="background-color: #000; color: #ccc;">
+    <body style="background-color: #131ba7c8; color: #ccc;">
         <div class="container">
             <div class="instruction-box">
                 <h2>Instructions</h2>
                 <p>Welcome to the ONR-ISR Radio Communication Panel. Please follow these steps to operate the radio:</p>
                 <ol>
-                    <li>Select the appropriate callsign from the dropdown list.</li>
-                    <li>Choose the radio channel (NAV1, NAV2, COMM1, COMM2) for communication.</li>
-                    <li>Adjust the frequency using the +/- buttons or enter it manually.</li>
-                    <li>Click on 'Transmit' or 'Receive' to communicate.</li>
-                    <li>Close the panel using the 'X' button at the top-right corner.</li>
+                    <li>Select the ISR01 callsign from the dropdown list.</li>
+                    <li>Choose the COMM1 radio channel for communication.</li>
+                    <li>Click on 'Transmit COMM1' to communicate.</li>
                 </ol>
             </div>
             <div class="radiopanel-container">
@@ -310,8 +308,10 @@
                     </div>
                     <br><br>
                     <div class="controls">
-                        <button onclick="txcomm1()" class="transmit-btn">Transmit COMM1</button>
+                        <!-- <button onclick="txcomm1()" class="transmit-btn">Transmit COMM1</button> -->
                         <button onclick="txcomm2()" class="receive-btn">Transmit COMM2</button>
+                        <button id="txcomm1-btn" class="transmit-btn">Transmit COMM1</button>
+                        <!-- <button  class="receive-btn">Transmit COMM2</button> -->
                     </div>
                 </div>
             </div>
@@ -319,16 +319,67 @@
         <button class="openbtn"></button> 
     </body>
     <script>
-        let currentFrequency = 123.45;
+        let currentFrequency = 122.8;
+        // let txdialog;
 
         document.querySelector('.openbtn').addEventListener('click', function() {
-    document.getElementById('radiopanel').classList.toggle('open');
+            document.getElementById('radiopanel').classList.toggle('open');
         });
 
         document.querySelector('.radiopanel-closebtn').addEventListener('click', function() {
-    document.getElementById('radiopanel').classList.remove('open');
+                document.getElementById('radiopanel').classList.remove('open');
+            });
+        const transmitComm1Button = document.getElementById('txcomm1-btn');
+        const callsignBox = document.getElementById('callsign');
+        const txdialog = document.createElement('dialog');
+        txdialog.innerHTML = `
+            <p>${callsign} transmitting updates</p>
+        `;
+        // transmitComm1Button.parentElement.appendChild(txdialog);
+        document.body.appendChild(txdialog);
+        transmitComm1Button.addEventListener('pointerdown', function() { 
+            const callsign = document.getElementById('callsign').value;
+            const radio = document.querySelector('input[name="radio-select"]:checked');
+            const frequency = document.getElementById('frequency-display').value;
+
+            if (callsign !== "ISR") {
+                alert("SSelect correct Callsign for transmitting updates");
+            } else if (!frequency) {
+                alert("Set Frequency");
+            } else if (radio && radio.value === "Comm1") {
+                showTransmitDialog(callsign, radio.value, currentFrequency.toFixed(2));
+            } else {
+                alert("Select a radio channel for transmitting updates");
+            }
         });
 
+        transmitComm1Button.addEventListener('mouseup', function() {
+            closeTransmitDialog();
+        });
+
+        function showTransmitDialog(callsign, radio, frequency) {
+            // txdialog = document.createElement('dialog');
+            // console.log("mouse down event detected", txdialog)
+            txdialog.innerHTML = `
+                <p>${callsign} transmitting updates on ${radio} ${frequency} MHz</p>
+            `;
+            transmitComm1Button.parentElement.appendChild(txdialog);
+            if (!txdialog.open) {
+                console.log("showing", txdialog)
+                txdialog.show();
+                setTimeout(() => txdialog.close(), 3000);
+            }
+            
+        }
+
+        function closeTransmitDialog() {
+            console.log("mouse up event detected", txdialog)
+            if (txdialog.open) {
+                txdialog.close();
+                // txdialog.remove();
+                
+            }
+        }
         function changeFrequency(step) {
             const frequencyDisplay = document.getElementById('frequency-display');
             let currentFrequency = parseFloat(frequencyDisplay.value);
@@ -417,7 +468,7 @@
                         <button onclick="this.closest('dialog').close()">Close</button>
                         `;
                         document.body.appendChild(dialog);
-                        dialog.showModal();
+                        dialog.show();
                         this.timeoutID=setTimeout(() => {radioReceive=1
                             fetch("/var?receive=" + radioReceive) 
                             clearTimeout(this.timeoutID)
@@ -440,5 +491,9 @@
                 }, 20000)  // wait 30 seconds to set it back to 0
             }
         }
+        
+
+        
+
     </script>
 </html>
