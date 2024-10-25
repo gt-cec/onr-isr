@@ -60,7 +60,7 @@ app.id = None
 
 study_scenario = 1
 study_sequence = 1
-study_config = "A0"
+study_config = "none"
 study_survey = "none"
 
 mission_complete = False
