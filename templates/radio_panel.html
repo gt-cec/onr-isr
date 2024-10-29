@@ -309,9 +309,8 @@
                     <br><br>
                     <div class="controls">
                         <!-- <button onclick="txcomm1()" class="transmit-btn">Transmit COMM1</button> -->
-                        <button onclick="txcomm2()" class="receive-btn">Transmit COMM2</button>
                         <button id="txcomm1-btn" class="transmit-btn">Transmit COMM1</button>
-                        <!-- <button  class="receive-btn">Transmit COMM2</button> -->
+                        <button onclick="txcomm2()" class="receive-btn">Transmit COMM2</button>
                     </div>
                 </div>
             </div>
@@ -320,7 +319,6 @@
     </body>
     <script>
         let currentFrequency = 122.8;
-        // let txdialog;
 
         document.querySelector('.openbtn').addEventListener('click', function() {
             document.getElementById('radiopanel').classList.toggle('open');
@@ -329,62 +327,56 @@
         document.querySelector('.radiopanel-closebtn').addEventListener('click', function() {
                 document.getElementById('radiopanel').classList.remove('open');
             });
+        
+        // Create the dialog element once and append it to the body
+        const transmitDialog = document.createElement('div');
+        transmitDialog.style.position = 'fixed';
+        transmitDialog.style.top = '50%';
+        transmitDialog.style.left = '50%';
+        transmitDialog.style.transform = 'translate(-50%, -50%)';
+        transmitDialog.style.padding = '60px'; // Tripled from 20px to 60px
+        transmitDialog.style.fontSize = '54px';
+        transmitDialog.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+        transmitDialog.style.color = '#fff';
+        transmitDialog.style.borderRadius = '8px';
+        transmitDialog.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
+        transmitDialog.style.zIndex = '1000';
+        transmitDialog.style.display = 'none';
+        transmitDialog.textContent = 'Transmitting on Comm 1';
+        document.body.appendChild(transmitDialog);
+    
         const transmitComm1Button = document.getElementById('txcomm1-btn');
-        const callsignBox = document.getElementById('callsign');
-        const txdialog = document.createElement('dialog');
-        txdialog.innerHTML = `
-            <p>${callsign} transmitting updates</p>
-        `;
-        // transmitComm1Button.parentElement.appendChild(txdialog);
-        document.body.appendChild(txdialog);
-        transmitComm1Button.addEventListener('pointerdown', function() { 
+        // Add event listeners for mousedown and mouseup
+        transmitComm1Button.addEventListener('pointerdown', handleMouseDown);
+        transmitComm1Button.addEventListener('pointerup', handleMouseUp);
+
+        function handleMouseDown() {
             const callsign = document.getElementById('callsign').value;
             const radio = document.querySelector('input[name="radio-select"]:checked');
             const frequency = document.getElementById('frequency-display').value;
 
             if (callsign !== "ISR") {
-                alert("SSelect correct Callsign for transmitting updates");
+                alert("Select correct Callsign for transmitting target updates");
             } else if (!frequency) {
                 alert("Set Frequency");
             } else if (radio && radio.value === "Comm1") {
-                showTransmitDialog(callsign, radio.value, currentFrequency.toFixed(2));
+                // Show the dialog
+                transmitDialog.style.display = 'block';
             } else {
-                alert("Select a radio channel for transmitting updates");
-            }
-        });
-
-        transmitComm1Button.addEventListener('mouseup', function() {
-            closeTransmitDialog();
-        });
-
-        function showTransmitDialog(callsign, radio, frequency) {
-            // txdialog = document.createElement('dialog');
-            // console.log("mouse down event detected", txdialog)
-            txdialog.innerHTML = `
-                <p>${callsign} transmitting updates on ${radio} ${frequency} MHz</p>
-            `;
-            transmitComm1Button.parentElement.appendChild(txdialog);
-            if (!txdialog.open) {
-                console.log("showing", txdialog)
-                txdialog.show();
-                setTimeout(() => txdialog.close(), 3000);
-            }
-            
-        }
-
-        function closeTransmitDialog() {
-            console.log("mouse up event detected", txdialog)
-            if (txdialog.open) {
-                txdialog.close();
-                // txdialog.remove();
-                
+                alert("Select the correct radio channel for transmitting target updates");
             }
         }
+
+        function handleMouseUp() {
+            // Hide the dialog
+            transmitDialog.style.display = 'none';
+        }
+        
         function changeFrequency(step) {
             const frequencyDisplay = document.getElementById('frequency-display');
             let currentFrequency = parseFloat(frequencyDisplay.value);
             currentFrequency += step;
-            currentFrequency = Math.max(118.00, Math.min(121.95, currentFrequency));  // Ensure frequency stays within valid range (118.00 to 121.95)
+            currentFrequency = Math.max(118.00, Math.min(129.95, currentFrequency));  // Ensure frequency stays within valid range (118.00 to 121.95)
             frequencyDisplay.value = currentFrequency.toFixed(2);
         }
 
