@@ -94,9 +94,9 @@ function init(numTargetsIteration, targetMotionIteration, searchPattern) {
     // Get the number of targets
     let numTargets;
     switch (numTargetsIteration) {
-        case "A": numTargets = 10; break;
+        case "A": numTargets = 15; break;
         case "B": numTargets = 20; break;
-        case "C": numTargets = 30; break;
+        case "C": numTargets = 10; break;
         case "D": numTargets = 50; break;
         case "E": numTargets = 100; break;
     }

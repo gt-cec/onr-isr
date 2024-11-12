@@ -34,7 +34,7 @@ if (SCENARIO_CONTROL_MODE == 0) % MEDEVAC
     CONTROL.PARAM.CBF_A2QP = zeros(1,1);
     CONTROL.PARAM.CBF_B1QP = zeros(1,1);
 else % ISR
-    CONTROL.PARAM.CBF_CONST = 0.2; % For OSPREY {ISR constant Value} {ISR 1st round 0.2}
+    CONTROL.PARAM.CBF_CONST = 0.1; % For OSPREY {ISR constant Value} {ISR 1st round 0.2}
     CONTROL.PARAM.CBF_H = zeros(20,1);
     CONTROL.PARAM.CBF_HDOT = zeros(20,1);
     CONTROL.PARAM.CBF_PSI = zeros(20,1);
@@ -69,7 +69,7 @@ if (SCENARIO_CONTROL_MODE == 0) % MEDEVAC
     CONTROL.TARGET.OBSTACLE_THREATCLASS = ones(1,1);
 else % ISR
     % CONTROL.TARGET.VELOCITY = 303.806; % OSPREY - feet/sec
-    CONTROL.TARGET.VELOCITY = 455.709; % OSPREY - feet/sec 
+    CONTROL.TARGET.VELOCITY = 455.709*1.5; % OSPREY - feet/sec 
     % Obstacles to avoid
     CONTROL.TARGET.OBSTACLE_ID = zeros(20,1);
     CONTROL.TARGET.OBSTACLE_LATITUDE = zeros(20,1);
