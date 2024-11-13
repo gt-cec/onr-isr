@@ -77,7 +77,7 @@ function init(numTargetsIteration, targetMotionIteration, searchPattern) {
         break;
     }
 
-    let userAircraftStart = toSurv(0, 1);
+    let userAircraftStart = toSurv(0.5, 0.5);
     userAircraft = new UserAircraft(userAircraftStart.x, userAircraftStart.y, userAircraftPath);
 
     // set ship speed gain for sim or MSFS realistic scenario

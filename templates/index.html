@@ -191,8 +191,12 @@
                     document.getElementById("AILevel").value = this.AILevel
                     document.getElementById("AILevel").setAttribute("disabled", "true")
                 }
+                if (this.seed) {
+                    document.getElementById("seed").value = this.seed
+                    document.getElementById("seed").setAttribute("disabled", "true")
+                }
 
-                console.log("Configuration: " + this.userId + " " + this.gameplayColor + " " + this.targetsIteration + " " + this.motionIteration + " " + this.searchPattern + " " + this.AILevel)
+                console.log("Configuration: userId" + this.userId + " gameplayColor " + this.gameplayColor + " targetsIteration " + this.targetsIteration + " motionIteration " + this.motionIteration + " searchPattern " + this.searchPattern + " AILevel " + this.AILevel + " seed " + this.seed)
                 hasStarted = false
                 document.getElementById('start-button').disabled = false
                 if (counter) {
@@ -209,6 +213,8 @@
                 this.motionIteration = this.studyConfig.startsWith("A") ? "F" : "F"
                 this.searchPattern = this.studyConfig.startsWith("A") ? "hold" : "ladder"
                 this.AILevel = this.studyConfig.endsWith("0") ? "Level0" : this.studyConfig.endsWith("1") ? "Level1" : this.studyConfig.endsWith("2") ? "Level2" : this.studyConfig.endsWith("3") ? "Level3" :  this.studyConfig.endsWith("4") ? "Level4" :"Level0"
+                // Seed is ISR II for Low taskload and ISR II B for high taskload
+                this.seed = this.studyConfig.startsWith("A") ? "ONR ISR II" : "High"
                 updateFormFromGlobals()
             }
 
