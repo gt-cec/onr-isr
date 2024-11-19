@@ -48,7 +48,7 @@ class TargetShip {
     }
 
     renderText(ctx) {
-        ctx.font = "normal 600 15px Roboto"
+        ctx.font = "normal 600 20px Roboto"
         ctx.fillStyle = "black"
 
         // render the text
