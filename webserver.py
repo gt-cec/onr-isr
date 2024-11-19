@@ -144,8 +144,6 @@ def update_aircraft():
 
     return jsonify(return_dict) 
 
-
-
 # spawns the ships given waypoints
 @app.route("/ships", methods=['POST'])
 def spawn_ships():
@@ -251,7 +249,6 @@ def matlab_update_ship(shipObs):
 
     return "success"
 
-
 @app.route('/run-executable', methods=['POST'])
 def run_executable():
     dataArr = request.get_json()
@@ -336,6 +333,19 @@ def post_config():
     study_scenario = scenario
     study_sequence = sequence
     study_survey = survey
+
+    # aircraft position
+    global ac_lat, ac_long, ac_old_lat, ac_old_long, ac_heading, ac_old_heading, ac_Xpx, ac_Ypx, ac_headingPx
+    ac_lat = 33.0
+    ac_long = -118.0
+    ac_old_lat = 33.0
+    ac_old_long = -118.0
+    ac_heading = 0.01
+    ac_old_heading = 0.01
+    ac_Xpx = 0.0
+    ac_Ypx = 0.0
+    ac_headingPx = 0.0
+
     return "Server: updated scenario (" + str(scenario) + ") and sequence (" + str(sequence) + "), new config: " + str(study_config) + ", last survey: " + str(survey)
 
 # logging route
@@ -507,7 +517,6 @@ def matlab_attentionstate():
 @app.route("/radio")
 def radio_panel():
     return render_template("radio_panel.html")
-
 
 if __name__ == '__main__':
     app.run("0.0.0.0", port=100, debug=False)

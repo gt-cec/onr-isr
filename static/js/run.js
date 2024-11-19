@@ -220,6 +220,9 @@ function init(numTargetsIteration, targetMotionIteration, searchPattern) {
 // Game loop
 function run(ctx) {
     if (!hasStarted) {
+        targetShips.forEach((target) => {
+            target.isVisible = false;
+        })
         return;
     }
     //const startTime = new Date().getTime();

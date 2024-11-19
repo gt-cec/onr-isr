@@ -13,8 +13,8 @@ class UserAircraft {
         this.rotation = 0;
         this.runningDistanceFromWaypoint = 999;
 
-        this.simx = 0;
-        this.simy = 0;
+        this.simx = 0.5;
+        this.simy = 0.5;
         this.simheading = 0;
     }
 
