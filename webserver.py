@@ -54,6 +54,7 @@ allMouseData = []
 phaseData = []
 clickData = []
 alertData = []
+targetData= []
 random.seed(time.time())
 rand = random.randint(1000, 9999)
 app.id = None
@@ -392,12 +393,15 @@ def saveData():
         pickle.dump(clickData, file)
     with open(filename, 'ab') as file:
         pickle.dump(alertData, file)
+    with open(filename, 'ab') as file:
+        pickle.dump(targetData, file)
     text_content = "\n".join(json.dumps(element) if isinstance(element, dict) else element for element in alertData)
     with open(txtFilename,"w") as file:
         file.write(text_content)
 
+
     #reset data structures at current mission end
-    if (data.get('phase') == 2):
+    if (data.get('phase') == 2 and mission_complete == True):
         exFilename = f"{app.id}_{study_config}_alerts.xlsx"
         if not os.path.isfile(exFilename):
             wb = Workbook()
@@ -414,6 +418,7 @@ def saveData():
         clickData.clear()
         allMouseData.clear()
         alertData.clear()
+        targetData.clear()
     return ""
 
 @app.route('/receive-mouse-coordinates', methods=["POST"])
@@ -426,6 +431,12 @@ def receive_mouse_coordinates():
 def receive_mouse_click():
     data = request.json
     clickData.extend(data)
+    return jsonify({})
+
+@app.route('/receive-target-data', methods=["POST"])
+def receive_target_data():
+    data = request.json
+    targetData.extend(data)
     return jsonify({})
 
 @app.route('/receive-alert', methods=["POST"])

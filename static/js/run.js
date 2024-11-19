@@ -18,6 +18,8 @@ let wez_alerts = 0;
 let osi_alerts = 0;
 // gain for MSFS speed
 let speedGain
+// target data
+let targetData = []
 
 
 // Main game function
@@ -219,12 +221,12 @@ function init(numTargetsIteration, targetMotionIteration, searchPattern) {
 
 // Game loop
 function run(ctx) {
-    if (!hasStarted) {
-        targetShips.forEach((target) => {
-            target.isVisible = false;
-        })
-        return;
-    }
+    // if (!hasStarted) {
+    //     targetShips.forEach((target) => {
+    //         target.isVisible = false;
+    //     })
+    //     return;
+    // }
     //const startTime = new Date().getTime();
 
     // clear the occupancy grid2d
@@ -282,6 +284,8 @@ function run(ctx) {
         // check if target is close to the aircraft
         let distanceToUser = distance(target.x, userAircraft.x, target.y, userAircraft.y);
         let withinDangerRing = (distanceToUser < target.dangerRadius)
+        // update closest approach distance
+        if (distanceToUser < target.closestApproachDistance) {target.closestApproachDistance = distanceToUser}
 
         // increment damage score
         if (withinDangerRing == true){ 
@@ -493,9 +497,11 @@ function run(ctx) {
         
     }
     
-    if(classedAll  && phase1Complete && phase2Complete){
+    if(classedAll  && phase1Complete && phase2Complete &&hasStarted){
         //call checkMissionStatus periodically or upon certain events
-        setInterval(checkMissionStatus, 5000);
+        console.log("calling checkMissionStatus")
+        checkMissionStatus();
+        //setInterval(checkMissionStatus, 5000);
     }
     
     
@@ -534,6 +540,7 @@ function run(ctx) {
 
 }
 
+let isMissionCompleteRunning = false; // Flag to prevent reentry
 
 async function checkMissionStatus() {
     // Send GET request to Flask server to check mission status
@@ -541,16 +548,46 @@ async function checkMissionStatus() {
     const data = await response.json();
     console.log(data)
     // if mission complete
-    if (data.missionEnd===true && hasStarted) {
+    if (data.missionEnd===true && hasStarted && !isMissionCompleteRunning) {
         console.log("Mission is complete");
-        missionComplete();
+        console.log("calling missionComplete()")
+        isMissionCompleteRunning = true; // Set flag to indicate missionComplete is running
+        await missionComplete();
+        isMissionCompleteRunning = false; // Reset flag after completion
     }
 }
 
-function missionComplete(){
+async function missionComplete(){
+    console.log("awaiting saveTargetData()")
+    await saveTargetData(); // wait for saveTargetData() to complete
+    console.log("completed saveTargetData()")
     pushAlert("Mission Complete")
-    alert("Mission Complete!");
-    hasStarted=false;
+    alert("Mission Complete!"); 
+    hasStarted=false; 
+}
+
+async function saveTargetData(){
+    for (const ship of targetShips) {
+        targetData.push({ id: ship.id, closestApproachDistance: ship.closestApproachDistance });
+        try {
+            const response = await fetch('/receive-target-data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(targetData),
+            });
+            const data = await response.json();
+            // Handle the data if needed
+        } catch (error) {
+            if (error.message.includes('JSON.parse: unexpected character at line 1 column 1 of the target JSON data')) {
+                return;
+            } else {
+                console.error('Error:', error);
+            }
+        }
+        targetData = []; // Clear targetData for each target
+    }
 }
 
 async function getSimulatorData(){

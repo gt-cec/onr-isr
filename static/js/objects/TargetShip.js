@@ -7,6 +7,8 @@ class TargetShip {
         this.dirTheta = -1
         this.runningDistanceFromWaypoint = Infinity  // distance from the waypoint, used to test if the object has overshot
 
+        this.closestApproachDistance = Infinity // Closest Approach Distance of Aircraft
+
         this.waypointCount = 1
         this.waypointArrayX = []
         this.waypointArrayY = []
