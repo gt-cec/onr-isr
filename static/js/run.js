@@ -221,12 +221,12 @@ function init(numTargetsIteration, targetMotionIteration, searchPattern) {
 
 // Game loop
 function run(ctx) {
-    // if (!hasStarted) {
-    //     targetShips.forEach((target) => {
-    //         target.isVisible = false;
-    //     })
-    //     return;
-    // }
+    if (!hasStarted) {
+        targetShips.forEach((target) => {
+            target.isVisible = false;
+        })
+        return;
+    }
     //const startTime = new Date().getTime();
 
     // clear the occupancy grid2d
@@ -455,7 +455,7 @@ function run(ctx) {
         phase1Complete = true;
         const endTime = new Date().getTime();
         const time = endTime - countupTimerStart;
-        fetch('/saveData', {
+        fetch('/receive-phase-data', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -486,7 +486,7 @@ function run(ctx) {
         phase2Complete = true;
         const endTime = new Date().getTime();
         const time = endTime - countupTimerStart;
-        fetch('/saveData', {
+        fetch('/receive-phase-data', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -521,23 +521,32 @@ function run(ctx) {
     //    })
     //    hasStarted=false
     //}
-    if (minClassificationCounter >= numClassificationsToTrack && !phase3Complete && phase1Complete) {
-        alert("Mission Complete: Tracked, Classified all targets 2x");
-        pushAlert("Phase 3 Complete!")
-        pushAlert("Mission Complete")
-        phase3Complete = true;
-        const endTime = new Date().getTime();
-        const time = endTime - startTime;
-        fetch('/saveData', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({"phase": 3, "time": time, "score": score, "numClicks": numClicks})
-        })
-        hasStarted=false;
-    }
+    // if (minClassificationCounter >= numClassificationsToTrack && !phase3Complete && phase1Complete) {
+    //     alert("Mission Complete: Tracked, Classified all targets 2x");
+    //     pushAlert("Phase 3 Complete!")
+    //     pushAlert("Mission Complete")
+    //     phase3Complete = true;
+    //     const endTime = new Date().getTime();
+    //     const time = endTime - startTime;
+    //     fetch('/receive-phase-data', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify({"phase": 3, "time": time, "score": score, "numClicks": numClicks})
+    //     })
+    //     hasStarted=false;
+    // }
 
+}
+
+
+function cheat() {
+    targetShips.forEach(ship => {
+        ship.seenTargetClass = true;
+        ship.seenThreatClass = true;
+        ship.mousedOver = true;
+    })
 }
 
 let isMissionCompleteRunning = false; // Flag to prevent reentry
@@ -553,41 +562,41 @@ async function checkMissionStatus() {
         console.log("calling missionComplete()")
         isMissionCompleteRunning = true; // Set flag to indicate missionComplete is running
         await missionComplete();
-        isMissionCompleteRunning = false; // Reset flag after completion
     }
 }
 
 async function missionComplete(){
     console.log("awaiting saveTargetData()")
     await saveTargetData(); // wait for saveTargetData() to complete
-    console.log("completed saveTargetData()")
+    await fetch("/saveData");
+    console.log("completed saveTargetData() and saveData")
+
     pushAlert("Mission Complete")
     alert("Mission Complete!"); 
     hasStarted=false; 
 }
 
 async function saveTargetData(){
-    for (const ship of targetShips) {
-        targetData.push({ id: ship.id, closestApproachDistance: ship.closestApproachDistance });
-        try {
-            const response = await fetch('/receive-target-data', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(targetData),
-            });
-            const data = await response.json();
-            // Handle the data if needed
-        } catch (error) {
-            if (error.message.includes('JSON.parse: unexpected character at line 1 column 1 of the target JSON data')) {
-                return;
-            } else {
-                console.error('Error:', error);
-            }
+    targetData = []
+    targetShips.forEach((ship) => {
+        targetData.push({ id: ship.id, threatclass: ship.threatClass, closestApproachDistance: ship.closestApproachDistance });
+    })
+    try {
+        const response = await fetch('/receive-target-data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(targetData),
+        });
+    } catch (error) {
+        if (error.message.includes('JSON.parse: unexpected character at line 1 column 1 of the target JSON data')) {
+            return;
+        } else {
+            console.error('Error:', error);
         }
-        targetData = []; // Clear targetData for each target
     }
+    targetData = []; // Clear targetData for each target
 }
 
 async function getSimulatorData(){

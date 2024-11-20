@@ -1,6 +1,11 @@
-import pickle
-#file_name = input("Enter file name: ")
-with open('319_B2.pkl', 'rb') as file:
+import pickle, sys
+
+if len(sys.argv) > 1:
+    file_name = sys.argv[1]
+else:
+    file_name = input("Enter file name: ")
+#with open('None_none.pkl', 'rb') as file:
+with open(f'{file_name}.pkl', 'rb') as file:
     allMouseData = pickle.load(file)
     phaseData = pickle.load(file)
     clickData = pickle.load(file)

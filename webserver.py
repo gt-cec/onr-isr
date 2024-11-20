@@ -365,8 +365,8 @@ def saveId():
     print(app.id)
     return ""
 
-@app.route("/saveData", methods=["POST"])
-def saveData():
+@app.route("/receive-phase-data", methods=["POST"])
+def receive_phase_data():
     data = request.get_json()
     newData = {
         "phase": data.get('phase'),
@@ -381,7 +381,13 @@ def saveData():
         "osi_alerts": data.get('osi_alerts'),
         "utc_alerts": data.get('utc_alerts')
     }
+    print("PHASE DATA RECEIVED", newData)
     phaseData.append(newData)
+    return jsonify({})
+ 
+@app.route("/saveData", methods=["POST", "GET"])
+def saveData():
+    
     filename = f"{app.id}_{study_config}.pkl"
     txtFilename = f"{app.id}_{study_config}.txt"
 
@@ -395,13 +401,14 @@ def saveData():
         pickle.dump(alertData, file)
     with open(filename, 'ab') as file:
         pickle.dump(targetData, file)
+        
     text_content = "\n".join(json.dumps(element) if isinstance(element, dict) else element for element in alertData)
     with open(txtFilename,"w") as file:
         file.write(text_content)
 
 
-    #reset data structures at current mission end
-    if (data.get('phase') == 2 and mission_complete == True):
+    #save excel file and reset data structures at current mission end
+    if (mission_complete == True):
         exFilename = f"{app.id}_{study_config}_alerts.xlsx"
         if not os.path.isfile(exFilename):
             wb = Workbook()
@@ -435,8 +442,10 @@ def receive_mouse_click():
 
 @app.route('/receive-target-data', methods=["POST"])
 def receive_target_data():
+    global targetData
     data = request.json
-    targetData.extend(data)
+    print("RECEIVED", data)
+    targetData = data
     return jsonify({})
 
 @app.route('/receive-alert', methods=["POST"])
