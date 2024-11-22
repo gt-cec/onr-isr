@@ -335,18 +335,6 @@ def post_config():
     study_sequence = sequence
     study_survey = survey
 
-    # aircraft position
-    global ac_lat, ac_long, ac_old_lat, ac_old_long, ac_heading, ac_old_heading, ac_Xpx, ac_Ypx, ac_headingPx
-    ac_lat = 33.0
-    ac_long = -118.0
-    ac_old_lat = 33.0
-    ac_old_long = -118.0
-    ac_heading = 0.01
-    ac_old_heading = 0.01
-    ac_Xpx = 0.0
-    ac_Ypx = 0.0
-    ac_headingPx = 0.0
-
     return "Server: updated scenario (" + str(scenario) + ") and sequence (" + str(sequence) + "), new config: " + str(study_config) + ", last survey: " + str(survey)
 
 # logging route
@@ -463,7 +451,6 @@ def set_mission_complete():
 
 @app.route('/get-mission-complete', methods=["GET"])
 def get_mission_complete():
-    #print("Sending mission complete ", mission_complete)
     return jsonify({"missionEnd": mission_complete})
 
 # data for MATLAB route

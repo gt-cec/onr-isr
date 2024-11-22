@@ -160,6 +160,11 @@
             document.getElementById("current-scenario").innerHTML = scenario
             document.getElementById("current-sequence").innerHTML = sequence
 
+            window.setInterval(async () => {
+               let missionEnd = (await (await fetch("/get-mission-complete")).json()).missionEnd
+               document.getElementById("end-mission").style.backgroundColor = missionEnd ? "" : "grey"
+            }, 200)
+
             async function updatecogstate(cogstate){
                 await fetch("/cognitivestate", {method: "POST", headers:{
                     'Content-Type': 'application/json'
@@ -203,13 +208,14 @@
 
             
             async function missionComplete() {
+                let missionEnd = (await (await fetch("/get-mission-complete")).json()).missionEnd
                 // Send POST request to Flask server to set mission_complete to true
                 await fetch("/set-mission-complete", {
                     method: "POST",
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ "missionEnd": true })
+                    body: JSON.stringify({ "missionEnd": !missionEnd })
                 });
             }
 
@@ -230,18 +236,22 @@
             });
             function decreaseSequence() {
                 updateConfig(scenario, sequence--);
+                missionRestart();
             }
 
             function increaseSequence() {
                 updateConfig(scenario, sequence++);
+                missionRestart();
             }
 
             function decreaseScenario() {
                 updateConfig(scenario--, sequence);
+                missionRestart();
             }
 
             function increaseScenario() {
                 updateConfig(scenario++, sequence);
+                missionRestart();
             }
 
             function surveyPre() {
