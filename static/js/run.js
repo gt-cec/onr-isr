@@ -601,7 +601,7 @@ async function saveTargetData(){
 
 async function getSimulatorData(){
     // retrieve MSFS a/c location
-    if (useMSFScoords){
+    if (useMSFScoords && hasStarted){
         await fetch("/aircraft")
         .then((resp) => resp.json())
         .then((data) => {
